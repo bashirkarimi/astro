@@ -12,14 +12,21 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+const { Content } = await entry.render();
 import Layout from "../layouts/layout.astro";
 ---
 <Layout title={entry.data.title}>
-<div>{entry.data.title}</div>
-<div>{entry.data.description}</div>
-<div>{entry.data.author}</div>
-<div>{entry.data.pubDate.toDateString()}</div>
-<div>{entry.data.tags.join(", ")}</div>
-<div>{entry.body}</div>
 
+  <article>
+    <header>
+    <h1>{entry.data.title}</h1>
+    <p><em>By {entry.data.author} on {entry.data.pubDate.toDateString()}</em></p>
+    <div>
+      {entry.data.description}
+    </div>
+    </header>
+    <div>
+      <Content />
+    </div>
+  </article>
 </Layout>
