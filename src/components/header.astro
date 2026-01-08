@@ -2,12 +2,12 @@
 import { Image } from "astro:assets";
 ---
 
-<header>
+<header class="flex items-center py-4">
   <a href="/">
-    <Image src="/images/astro-logo.png" alt="My Astro Site Logo" width={86} height={86} />
+    <Image src="/images/astro-logo.png" alt="My Astro Site Logo" width={86} height={86} class="aspect-square object-cover" />
   </a>
 
-  <nav>
+  <nav class="ml-auto space-x-4">
     <a href="/">Home</a>
     <a href="/about">About</a>
     <a href="/blogs">Blogs</a>

@@ -14,10 +14,12 @@ const { title = "Astro" } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <Header />
-    <main>
-      <slot />
-    </main>
-    <Footer />
+    <div class="container px-4 md:px-8 lg:px-16 mx-auto flex flex-col min-h-screen ">
+      <Header />
+      <main class="">
+        <slot />
+      </main>
+      <Footer />
+    </div>
   </body>
 </html>
