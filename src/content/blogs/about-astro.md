@@ -6,6 +6,7 @@ author: "Alex Morgan"
 tags: ["astro", "javascript", "web"]
 draft: false
 slug: "getting-started-with-astro"
+image: "../../images/api-design-architecture-diagram.jpg"
 ---
 
 ## What is Astro?

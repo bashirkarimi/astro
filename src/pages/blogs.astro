@@ -1,22 +1,67 @@
 ---
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
 const blogCollection: CollectionEntry<"blogs">[] = await getCollection("blogs");
+import { Calendar, ArrowUpRight } from "@lucide/astro";
+import placeHolderImage from "../images/placeholder.svg";
 
 import Layout from "../layouts/layout.astro";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+  CardAction,
+} from "@/components/ui/card";
+console.log(placeHolderImage);
 ---
 
 <Layout title="Blog Posts">
   <div>
     <h1>Blog Posts</h1>
-    <ul>
+    <div class="flex flex-col gap-6 mt-6">
       {
         blogCollection.map((post) => (
-          <li>
-            <a href={`/pages/${post.slug}`}>{post.data.title}</a>
-          </li>
+          
+          <a href={`/pages/${post.slug}`}>
+            <Card class="grid md:grid-cols-[240px_1fr]">
+              <div class="relative overflow-hidden bg-muted">
+                <Image
+                  src={post.data.image ?? placeHolderImage}
+                  alt={post.data.title}
+                  sizes="(max-width: 768px) 680px, 240px"
+                  class="object-cover aspect-4/3 md:aspect-square group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div class="flex flex-col pb-6 md:py-6 px-6 ">
+                <CardHeader>
+                  <CardTitle>
+                    <h3 class="text-2xl font-semibold mb-3 group-hover:text-accent transition-colors text-balance">
+                      {post.data.title}
+                    </h3>
+                  </CardTitle>
+                  <CardAction>
+                    <ArrowUpRight class="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" />
+                  </CardAction>
+                </CardHeader>
+                <CardContent>
+                  <p class="text-muted-foreground leading-relaxed mb-4 text-pretty">
+                    {post.data.description}
+                  </p>
+                </CardContent>
+                <CardFooter class="flex items-center gap-4 text-sm text-muted-foreground mt-auto">
+                  <span class="flex items-center gap-1.5">
+                    <Calendar class="w-4 h-4" />
+                    {post.data.pubDate.toDateString()}
+                  </span>
+                </CardFooter>
+              </div>
+            </Card>
+          </a>
         ))
       }
-    </ul>
+    </div>
   </div>
 </Layout>
