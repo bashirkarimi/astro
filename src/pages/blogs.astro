@@ -15,7 +15,7 @@ import {
   CardFooter,
   CardAction,
 } from "@/components/ui/card";
-console.log(placeHolderImage);
+import Badge from "@/components/ui/badge.astro";
 ---
 
 <Layout title="Blog Posts">
@@ -47,6 +47,15 @@ console.log(placeHolderImage);
                   </CardAction>
                 </CardHeader>
                 <CardContent>
+                  {post.data.tags && (
+                    <div class="flex gap-2 mb-4">
+                    {post.data.tags.map((tag) => (
+                    <Badge variant="outline" size="sm">
+                      {tag}
+                    </Badge>
+                    ))}
+                    </div>
+                  )}
                   <p class="text-muted-foreground leading-relaxed mb-4 text-pretty">
                     {post.data.description}
                   </p>

@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/layout.astro";
 import Button from "@/components/ui/button.astro";
+import Badge from "@/components/ui/badge.astro";
 ---
 
 <Layout title="Home Page">
@@ -42,4 +43,21 @@ import Button from "@/components/ui/button.astro";
       <path d="M6 6l12 12M6 18L18 6"></path>
     </svg>
   </Button>
+
+  <p>Tages</p>
+    <Badge variant="default" >
+    Default
+  </Badge>
+  <Badge variant="default" size="sm">
+    Default Small
+  </Badge>
+  <Badge variant="outline" size="md">
+    Outline Medium
+  </Badge>
+  <Badge variant="secondary" size="lg">
+    Secondary Large
+  </Badge>
+  <Badge variant="destructive" size="md">
+    Destructive Medium
+  </Badge>
 </Layout>
