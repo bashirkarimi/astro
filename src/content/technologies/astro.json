@@ -1,0 +1,76 @@
+{
+  "id": "astro",
+  "name": "Astro",
+  "displayName": "Astro.build",
+  "tagline": "The web framework for content-driven websites",
+  "description": "Astro is a modern static site builder that delivers lightning-fast performance with a focus on sending less JavaScript to the browser.",
+  "version": "4.0",
+  "logo": {
+    "light": "/logos/astro-light.svg",
+    "dark": "/logos/astro-dark.svg",
+    "icon": "🚀"
+  },
+  "colors": {
+    "primary": "#FF5D01",
+    "secondary": "#4F39FA",
+    "accent": "#F97316"
+  },
+  "officialLinks": {
+    "website": "https://astro.build",
+    "docs": "https://docs.astro.build",
+    "github": "https://github.com/withastro/astro",
+    "discord": "https://astro.build/chat",
+    "twitter": "https://twitter.com/astrodotbuild"
+  },
+  "categories": [
+    {
+      "id": "introduction",
+      "title": "Getting Started",
+      "icon": "🚀",
+      "description": "Quick start guides to get you up and running in minutes",
+      "order": 1,
+      "color": "#10b981"
+    },
+    {
+      "id": "best-practices",
+      "title": "Best Practices",
+      "icon": "⚡",
+      "description": "Learn from experts and write better code",
+      "order": 2,
+      "color": "#f59e0b"
+    },
+    {
+      "id": "know-how",
+      "title": "Know-How",
+      "icon": "🎓",
+      "description": "Step-by-step guides for common tasks and workflows",
+      "order": 3,
+      "color": "#3b82f6"
+    }
+  ],
+  "featuredDocs": [
+    "astro/introduction/getting-started",
+    "astro/best-practices/performance",
+    "astro/know-how/content-collections"
+  ],
+  "quickLinks": [
+    {
+      "title": "Install Astro",
+      "href": "/docs/astro/introduction/installation",
+      "icon": "📦"
+    },
+    {
+      "title": "Content Collections",
+      "href": "/docs/astro/know-how/content-collections",
+      "icon": "📚"
+    },
+    {
+      "title": "Deploy to Production",
+      "href": "/docs/astro/best-practices/deployment",
+      "icon": "🚀"
+    }
+  ],
+  "status": "stable",
+  "popularity": 95,
+  "lastUpdated": "2024-01-10"
+}

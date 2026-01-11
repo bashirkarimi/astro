@@ -14,4 +14,18 @@ export const collections = {
         image: image().optional(),
       }),
   }),
+  docs: defineCollection({
+    schema: z.object({
+      title: z.string(),
+      description: z.string(),
+      technology: z.enum(["astro", "nextjs", "react", "vue", "svelte"]),
+      category: z.enum(["introduction", "best-practices", "know-how"]),
+      order: z.number().default(0),
+      draft: z.boolean().default(false),
+      lastUpdated: z.coerce.date().optional(), // Changed from z.date() to z.coerce.date()
+      authors: z.array(z.string()).optional(),
+      tags: z.array(z.string()).optional(),
+      relatedDocs: z.array(z.string()).optional(),
+    }),
+  }),
 };

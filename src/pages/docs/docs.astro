@@ -1,0 +1,109 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/layout.astro";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+  CardAction,
+} from "@/components/ui/card";
+
+// Get all technologies
+const allDocs: CollectionEntry<"docs">[] = await getCollection("docs");
+const technologies = ["astro", "nextjs", "react"] as const;
+
+const technologyLabels: Record<(typeof technologies)[number], string> = {
+  astro: "Astro",
+  nextjs: "Next.js",
+  react: "React",
+};
+
+const categoryOrder = ["introduction", "best-practices", "know-how"] as const;
+
+const categoryLabels: Record<(typeof categoryOrder)[number], string> = {
+  introduction: "Introduction",
+  "best-practices": "Best Practices",
+  "know-how": "Know-How",
+};
+
+function sortDocs(a: CollectionEntry<"docs">, b: CollectionEntry<"docs">) {
+  return (
+    (a.data.order ?? 0) - (b.data.order ?? 0) ||
+    a.data.title.localeCompare(b.data.title)
+  );
+}
+
+const docsByTech = technologies.map((technology) => {
+  const techDocs = allDocs.filter((doc) => doc.data.technology === technology);
+
+  const categories = categoryOrder.map((category) => {
+    const docs = techDocs
+      .filter((doc) => doc.data.category === category)
+      .sort(sortDocs);
+
+    return { category, label: categoryLabels[category], docs };
+  });
+
+  return { technology, label: technologyLabels[technology], categories };
+});
+---
+
+<Layout
+  title="Developer Documentation"
+  description="Everything you need to build amazing applications"
+>
+  <div class="hero">
+    <h1>Developer Documentation</h1>
+    <p>
+      Everything you need to build amazing applications. Comprehensive guides,
+      API references, and best practices all in one place.
+    </p>
+  </div>
+
+  <div>
+    {
+      docsByTech.map(({ technology, label, categories }) => (
+        <Card as="section" aria-labelledby={`${technology}-heading`}>
+          <div class="p-6 flex flex-col gap-6">
+            <CardHeader class="border-b border-border pb-6">
+              <CardTitle>
+                <h2 id={`${technology}-heading`} class="heading-card">
+                  {label}
+                </h2>
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent class="p-0 flex flex-col gap-6">
+              {categories.every((c) => c.docs.length === 0) ? (
+                <p class="body-small">No documentation yet.</p>
+              ) : (
+                categories.map(({ category, label: categoryLabel, docs }) =>
+                  docs.length === 0 ? null : (
+                    <div>
+                      <h3 class="heading-small mb-3">{categoryLabel}</h3>
+                      <ul class="space-y-2">
+                        {docs.map((doc) => (
+                          <li>
+                            <a
+                              href={`/docs/${doc.slug}`}
+                              class="text-sm text-foreground/80 hover:text-accent transition-colors"
+                            >
+                              {doc.data.title}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ),
+                )
+              )}
+            </CardContent>
+          </div>
+        </Card>
+      ))
+    }
+  </div>
+</Layout>

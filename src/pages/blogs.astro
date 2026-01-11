@@ -12,7 +12,7 @@ blogCollection.forEach((post) => {
     tagsCount.set(tag, (tagsCount.get(tag) ?? 0) + 1),
   );
 });
-console.log(tagsCount);
+
 const allTags = Array.from(tagsCount.entries());
 
 import Layout from "../layouts/layout.astro";
