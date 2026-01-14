@@ -1,0 +1,50 @@
+---
+title: "Strengths and Limitations"
+description: "An overview of the advantages and challenges when using Next.js."
+technology: "next.js"
+category: "core features"
+order: 6
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["beginner", "setup", "installation"]
+---
+
+### **Strengths:**
+
+**Performance by Default**
+
+- Automatic code splitting
+- Image optimization
+- Font optimization (next/font)
+- Script loading strategies
+- Streaming SSR
+
+**Developer Experience**
+
+- Zero-config TypeScript
+- Fast Refresh (instant feedback)
+- Built-in ESLint configuration
+- File-based routing (no router config)
+- API routes without separate backend
+
+**SEO & Accessibility**
+
+- Server-rendered HTML for crawlers
+- Proper meta tag handling
+- Semantic HTML from Server Components
+- Works perfectly with your accessibility focus
+
+**Scalability**
+
+- Mix rendering strategies per route
+- Edge runtime support (deploy globally)
+- Incremental adoption (can use with existing React apps)
+- Parallel rendering architecture
+
+### **Limitations:**
+
+- Hosting Constraints & Vendor Lock-In Considerations
+- Learning Curve & Architectural Complexity
+- Abstraction and Configuration Limits: Next.js simplifies many things, but for very unusual requirements (custom bundler tweaks, very specialized build config), it may feel restrictive.
+- Bundle Size & Complexity in Large Apps: Because of its many features and abstractions, large Next.js apps may ship more JavaScript than leaner frameworks unless you optimize carefully. Some developers report performance issues under high load.
+- State Management & Realtime / Complex Backend Logic Might Be Better Elsewhere

@@ -1,0 +1,150 @@
+---
+title: "Core Features & Capabilities"
+description: "List the defining characteristics and what makes this technology valuable."
+technology: "next.js"
+category: "core features"
+order: 1
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["beginner", "setup", "installation"]
+---
+
+
+### Routing
+
+- **App Router (File-based Routing)**: A new file-system-based router with the `/app` directory. Each folder under `/app` defines a route segment. A `page.js`/`page.tsx` file exports the route’s component, and special files like `layout.js`, `loading.js`, `error.js`, etc. configure shared UI or behaviors. Automatic route creation, nested layouts, strong conventions, dynamic routes support. No extra config is needed and file paths mirror URLs.
+- **Nested Layouts & Templates**: The App Router supports nested `layout.js` files. A `layout.js` in a folder wraps all its child routes, persisting UI (e.g. navigation) across pages. The `template.js` is used for **non-persistent** wrappers (state resets on navigation).
+**Pros**: Shared UI/code (headers, navbars) defined once; state in parent layouts persists across child page navigations.
+**Cons:** Deeper nesting can add complexity. Data from a parent layout isn’t passed down (each layout/page must fetch its own data). Over-nesting can make understanding route hierarchy harder
+- **Loading UI:** Special `loading.js` files in a route segment display fallback UI during async renders. This integrates with React Suspense and streaming, allowing partial rendering of pages.
+**Pros:** Improves UX by showing progress (spinners, skeletons) during data fetches or navigation. Works automatically with server streaming so only missing pieces load.
+**Cons:** Requires extra files per segment. Not supported in the Pages Router (only App Router). Adds complexity to component hierarchy and build (Relies on React 18+ Suspense on the server).
+- **Error Boundaries:** You can export an `error.js` component in a route folder to catch errors in that segment. It must be a Client Component and receives the `error` and a `reset()` prop. A special `app/global-error.js` wraps the entire app for root-level errors.
+**Pros:** Smaller prefetch payloads and faster navigations. 
+**Cons:** More individual network requests (trade-off). Prefetch behavior is opaque; debugging prefetch can be tricky. Requires modern browser support for Request Idle/Cancelling.
+
+### Rendering & Data Fetching
+
+- **React Server Components (RSC)**: By default, components in `/app` are Server Components (no client JavaScript), unless marked with `'use client'`. Server Components can fetch data and render on the server, sending HTML to the client. They allow zero-bundle-size rendering for non-interactive UI.
+**Pros:** No hydration cost for purely static parts; data stays on server (better security). Out-of-the-box support for async/await in components. Can stream content.
+**Cons:** Must explicitly mark interactive components with `'use client'`. Hooks like `useState`, browser APIs unavailable unless client component. Debugging server/client boundaries can be tricky.
+    
+    ```jsx
+    // app/user/page.tsx (Server Component by default)
+    export default async function UserPage() {
+    const res = await fetch('https://api.example.com/user');
+    const user = await res.json();
+    return <div>User: {[user.name](http://user.name/)}</div>;
+    }
+    ```
+    
+- **Client Components**: When you need interactivity (event handlers, state), add `'use client'` at top of the file. This forces the component and its children to be bundled to the client.
+    
+    **Pros:** Clear separation of interactive code. Server Components remain optimized.
+    
+    **Cons:** Client Components incur bundle size and runtime cost.
+    
+- **Incremental Static Regeneration (ISR) & New Caching APIs:** Next.js 16 refines caching. The `revalidateTag(name, profile)` function (from `next/cache`) allows SWR-style invalidation. Two new APIs for Server Actions: `updateTag()` and `refresh()`. `updateTag(tag)` expires a tag immediately so the user sees updates right away.  `refresh()` forces a re-fetch of uncached data on the client without clearing other cache.
+    
+    ```jsx
+    import { revalidateTag } from 'next/cache';
+    export async function POST(...) {
+    // after mutating data
+    revalidateTag('posts', 'max'); // stale-while-revalidate
+    }
+    ```
+    
+    **Pros:** Precise control: you can invalidate only parts of the cache and let others remain fast. `updateTag` avoids user-perceived staleness after a form. `refresh` updates live data (like notifications) without reloading the whole page.
+    **Cons:** More API complexity. Developers must manage tags and profiles manually. Misuse (e.g. forgetting cache key) can lead to confusing stale data. Experimental “Cache Components” (using a `"use cache"` directive) offers more auto-caching, but is still emerging
+    
+- **Streaming and Suspense**: Next.js 16 supports React 19’s streaming. Long page renders are sent to the client in chunks. Combine with nested Suspense boundaries (including `loading.js`) to show portions progressively.
+**Pros:** Faster First Byte (TTFB) and perceived load times, as above-the-fold UI streams sooner. Fine-grained control via `<Suspense>`.
+**Cons:** Still experimental-ish; requires careful structuring. Potential SEO/hydration implications if not done right. Not all libraries support streaming with Suspense.
+- **Metadata API**: Next.js allows defining page `<head>` content via static exports (`export const metadata = { title: 'My Page', ... }` or an async `generateMetadata()` function) in page/layout files. This replaces manual `<Head>` management.
+[Next.js Metadata](https://nextjs.org/docs/app/getting-started/metadata-and-og-images)
+**Pros:** Declarative head content per-route, works seamlessly with React and streaming. Ensures correct HTML structure.
+**Cons:** More rigid format (object shape) and only in App Router. For custom needs you still use `<Head>` or `<Script>`.
+- **Performance Monitoring / Core Web Vitals**: Next.js includes built-in analytics hooks. The `useReportWebVitals` hook (for Pages Router) or App Router equivalent lets you capture LCP, FID, CLS, etc.
+[Next.js Analytics](https://nextjs.org/docs/app/guides/analytics)
+    
+    ```jsx
+    // pages/_app.js (Pages Router example)
+    import { useReportWebVitals } from 'next/web-vitals';
+    function MyApp({ Component, pageProps }) {
+    useReportWebVitals(metric => console.log(metric));
+    return <Component {...pageProps} />;
+    }
+    ```
+    
+    **Pros:** Easy access to Core Web Vitals in-app. Integrates with any analytics. Vercel can automatically collect metrics out-of-the-box
+    
+    **Cons:** Basic – **heavy custom monitoring requires extra setup**. Metrics APIs run in client JS, adding minor runtime cost.
+    
+- **Image Optimization:** Built-in `<Image>` component auto-optimizes images (responsive `srcset`, WebP/AVIF, lazy loading by default). Next.js 16 still provides this, with updated defaults (e.g. larger `minimumCacheTTL`, adjusted `imageSizes`)
+[Next-16](https://nextjs.org/blog/next-16)
+    
+    **Pros:** Significantly reduces image load times and bandwidth. Built-in caching and CDN support on Vercel.
+    
+    **Cons:** Can be inflexible (e.g. require width/height). Local hosting only (offsite URLs not transformed).
+    
+- **Font Optimization:** The `next/font` module automatically inlines or self-hosts Google and local fonts, eliminating render-blocking requests
+**Cons:** Build-time work (fonts downloaded). Limited font choices (Google/local only). Changing fonts requires code changes.
+- **React 19 Features**: Next.js 16 ships with React 19.2+. This brings features like View Transitions (CSS-based route animations), `useEffectEvent` (stable effect callbacks), and `Activity` API (background rendering helpers) [Next-16](https://nextjs.org/blog/next-16)
+
+### Fullstack / Backend
+
+- **Route Handlers (App API)**: Next.js 16 replaces traditional `/pages/api` routes with “Route Handlers” under `/app`. Any `route.js`/`route.ts` file exports HTTP method functions (`export async function GET(req)`, `POST`, etc.). It uses native `Request`/`Response` (and extended `NextRequest/NextResponse`) for Node/Edge APIs.
+[Next-Route-Handler](https://nextjs.org/docs/app/getting-started/route-handlers)
+    
+    **Pros:** Co-locating API with pages. No extra framework needed (simple fetch APIs). Supports streaming responses. Edge-capable by default.
+    
+    **Cons:** New syntax (no `req, res`, no default export). Limited to recognized HTTP methods. Requires manual CORS, auth logic. Pages `/pages/api` still work but are legacy for App Router apps.
+    
+- **Edge vs. Node.js Runtimes**: On the server, you can run code in the lightweight **Edge Runtime** (faster cold-start, global `fetch`, some Web APIs) or the full **Node.js Runtime** (all Node APIs). By default, Next.js 16 routes and middleware use Node.js (Edge is opt-in).
+    
+    You can set `export const runtime = 'edge'` in a page/layout/route, or `runtime: 'nodejs'` in `middleware.ts`
+    [Nextjs-Edge-Node-Runtime](https://nextjs.org/docs/14/app/building-your-application/rendering/edge-and-nodejs-runtimes)
+    
+    **Pros:** Edge functions provide lower latency and auto-scaling (great for geo-distributed content). Node runtime allows any npm package.
+    
+    **Cons:** Edge has strict size limits (∼1–4 MB), no Node built-ins, and different Web API set. Node serverless (or a dedicated server) has higher latency on cold start. Choosing the wrong runtime can lead to errors (`fs` not found on Edge).
+    
+- **Middleware & Proxying**:  A `middleware.ts` file (at root or in `/app`) intercepts requests at the Edge by default, enabling rewrites, redirects, auth checks, etc. Next.js 15.5+ added stable Node.js support for middleware. In Next.js 16, the old `middleware.ts` for complex routing is effectively renamed `proxy.ts` (Node-only) to clarify its proxying role. For example, you can set up a Node middleware by exporting `config = { runtime: 'nodejs' }`  [Next-15-5](https://nextjs.org/blog/next-15-5)
+**Pros:** Middleware can run on every request for logging, auth, A/B testing, etc. Edge middleware is fast and geographically distributed. Node proxying (`proxy.ts`) allows richer Node APIs (file system, crypto).
+**Cons:** Edge middleware is limited in API and size; Node middleware has cold starts. Middleware adds complexity to routing and can slow responses if heavy logic. The rename to `proxy.ts` may confuse legacy docs.
+- **Server Actions (Form handling)**: : Next.js supports React Server Actions: you can export a `'use server'` function to handle form submissions directly without an API route. In a `<form action={handler}>`, the server function receives the `FormData`. This replaces many “POST to /api” patterns.
+[Next-forms](https://nextjs.org/docs/app/guides/forms)
+    
+    **Pros:**Simplifies form logic: no manual API endpoints or client-side fetch needed. Progressive enhancement: forms work even if JS is disabled. `updateTag`/`refresh` in the same function can update the UI.
+    
+    **Cons:** Server Actions are tied to forms and only support certain patterns (e.g. multipart/form-data). All arguments must be serializable. Debugging server vs client code can be confusing.
+    
+
+### Developer Experience
+
+- **TypeScript Support**: It auto-generates types for route params (`useParams`, `LayoutProps`, etc.) and supports typed routes (via `typedRoutes: true` in `next.config.ts`). You get global `PageProps`, `LayoutProps`, and `RouteContext` helpers for strong typing without manual imports.
+- **ESLint (Linting)**: Next.js 16 deprecates the built-in `next lint` command in favor of standard ESLint/Biome usage. New projects can opt for ESLint (with an explicit `eslint.config.mjs`) or Biome (fast alternative). Existing projects can run the provided codemod to migrate to ESLint CLI. Next.js will no longer lint on build by default.
+- **SWC Compiler**: Next.js has used SWC (Rust-based) for TS/JS transpilation since v12. In v16, SWC is also the default minifier and compiler. This yields much faster builds and refresh.
+- **Turbopack (Bundler)**: Turbopack is Next.js’s new Webpack replacement, now *stable and default* for new projects.
+**Cons:** Slight behavioral differences (e.g. CSS order) and incomplete edge-case support. Some Webpack-specific plugins or configurations might not work. The ecosystem is still evolving, though it’s production-stable.
+- **Next.js DevTools (MCP)**: Next.js 16 introduces an experimental DevTools integration via the React Model Context Protocol (MCP). This allows inspection of React Server Components and their context in the browser devtools. It’s in alpha and improves debugging of the App Router. (No code sample; run `npx next dev` and install the Next.js DevTools extension).
+- **Create Next App & Defaults**: The `create-next-app` (v16) now defaults to the App Router, TypeScript, Tailwind, and ESLint/Biome setup. The project structure is simplified. This makes starting a new Next.js 16 app quicker.
+
+### Performance & Optimization
+
+- **Core Web Vitals Tracking**: Next.js tracks LCP, FID, CLS, INP, etc. (via `useReportWebVitals`). It also includes custom metrics (hydration time, route-change to render). You can easily wire these into any analytics or Vercel’s built-in monitoring.
+- **Prefetch & Caching (Enhanced)**: Beyond routing, caching internals have advanced. Prefetch now cancels offscreen work and only loads changed segments. Components can use the experimental `"use cache"` directive (Cache Components) for Partial Pre-Rendering (still alpha). In addition to tags, Next.js caching supports `export const dynamic = 'auto'| 'force-static'| 'force-dynamic'` to control behavior.
+- **SWC Minifier & `useLightningCSS`**: Next.js 16 uses Rust-based SWC for CSS minification (via `next build`) which is faster than CSSnano. There’s an experimental `useLightningCSS` config that further accelerates CSS processing.
+    
+    **Pros:** Faster builds. Lightning CSS (once stable) will reduce CSS bundle sizes and build times.
+    
+- **Performance Analysis Tools**: Next.js provides built-in **Bundle Analyzer** integration (`next build && next build --analyze`) and Web Vitals tooling. Vercel adds **Real User Monitoring** and **Edge Performance Insights** (out of app scope). These help find bottlenecks.
+
+### Deployment & Infrastructure
+
+- **Vercel (First-class Deployments)**: Next.js is built by Vercel, so it runs with zero-config on Vercel’s platform. This provides Serverless Function support, Edge Caching, Instant Rollbacks, and performance monitoring. Vercel automatically optimizes for Next.js’s features (e.g. true ISR, segmented cache).
+- **Self-Hosting / Build Adapters**: Next.js supports self-hosting on any Node.js server or container. In Next.js 16, the **Build Adapters API (alpha)** allows custom build outputs for other platforms [nextjs.org](https://nextjs.org/blog/next-16#:~:text=)
+    
+    **Pros:** Flexibility to deploy anywhere (Docker, AWS Lambda, etc.). Static export can produce a plain HTML/CSS/JS site for CDN hosting. Build adapters promise deeper integration with non-Vercel hosts.
+    
+    **Cons:** The adapters API is still alpha (breaking changes possible). Self-hosting means managing Node/Edge infrastructure yourself. Some features (like ISR) may need extra work off Vercel.

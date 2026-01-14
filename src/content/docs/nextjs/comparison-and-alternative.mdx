@@ -1,0 +1,26 @@
+---
+title: "Comparison and Alternatives"
+description: "How Next.js compares to similar or competing frameworks."
+technology: "next.js"
+category: "core features"
+order: 7
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["Next.js", "comparison", "alternatives"]
+---
+How Next.js stacks up compared to similar or competing frameworks.
+
+| Framework | Key Differences | Strengths | Weaknesses |
+| --- | --- | --- | --- |
+| **Next.js**  | Full‑stack React framework with SSR/SSG/ISR, Edge/Node, file‑based routing. | Broad ecosystem, strong corporate adoption, unified stack. | Larger runtime overhead than some ultra‑lean frameworks; complexity when mis‑used. |
+| **Remix / React Router v7** | Focus on web fundamentals, less opinionated, strong data‑loading model. ([BetterStack](https://betterstack.com/community/comparisons/nextjs-alternatives/?utm_source=chatgpt.com)) | Fine‑grained control of data fetching, simpler abstraction. | Smaller ecosystem for full‑stack; less “plug‑and‑play” features for SSR/Edge. |
+| **Gatsby** | Static‑site generation oriented (React). | Great for purely static, content‑heavy sites; large plugin ecosystem. | Less flexibility for dynamic SSR or full‑stack; less ideal for complex interactive apps. |
+| **SvelteKit** | Uses Svelte, compiles away runtime, very small bundles. | Ultra‑lean performance, lower JS overhead. | Smaller ecosystem; requires team to adopt Svelte. |
+| **Nuxt.js** | Vue‑based equivalent to Next.js. ([Strapi](https://strapi.io/blog/alternatives-to-nextjs?utm_source=chatgpt.com)) | If team uses Vue, natural fit; similar full‑stack features. | If you’re invested in React/Next.js, switching may cost. |
+
+**When to pick Next.js vs alternatives**:
+
+- Choose Next.js when you already use React or plan to use React, need full‑stack with SSR/Edge, and want a large ecosystem.
+- If your project is nearly static and bundle size is ultra‑critical, consider lighter frameworks like SvelteKit or Astro.
+- If you prefer Vue instead of React, Nuxt.js is more aligned.
+- For an architecture needing maximum control over data loading and minimal framework abstraction, Remix/React Router may be worth evaluating.
