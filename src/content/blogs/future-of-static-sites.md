@@ -3,7 +3,7 @@ title: "The Future of Static Sites"
 description: "Where static site generation is heading in the next few years."
 pubDate: 2025-02-01
 author: "Taylor Brooks"
-tags: ["ssg", "web", "performance"]
+tags: ["ssg", "web", "performance", "astro"]
 slug: "the-future-of-static-sites"
 ---
 

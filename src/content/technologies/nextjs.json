@@ -1,0 +1,93 @@
+{
+  "id": "nextjs",
+  "name": "Next.js",
+  "displayName": "Next.js",
+  "tagline": "The React Framework for the Web",
+  "description": "Next.js enables you to create full-stack web applications by extending React features with powerful performance optimizations.",
+  "version": "14.0",
+  "logo": {
+    "light": "/logos/nextjs-light.svg",
+    "dark": "/logos/nextjs-dark.svg",
+    "icon": "▲"
+  },
+  "colors": {
+    "primary": "#000000",
+    "secondary": "#FFFFFF",
+    "accent": "#0070F3"
+  },
+  "officialLinks": {
+    "website": "https://nextjs.org",
+    "docs": "https://nextjs.org/docs",
+    "github": "https://github.com/vercel/next.js",
+    "discord": "https://discord.gg/nextjs",
+    "twitter": "https://twitter.com/nextjs"
+  },
+  "categories": [
+    {
+      "id": "introduction",
+      "title": "Getting Started",
+      "icon": "🚀",
+      "description": "Learn the fundamentals of Next.js",
+      "order": 1,
+      "color": "#10b981"
+    },
+    {
+      "id": "best-practices",
+      "title": "Best Practices",
+      "icon": "⚡",
+      "description": "Optimize your Next.js applications",
+      "order": 2,
+      "color": "#f59e0b"
+    },
+    {
+      "id": "know-how",
+      "title": "Know-How",
+      "icon": "🎓",
+      "description": "Advanced patterns and techniques",
+      "order": 3,
+      "color": "#3b82f6"
+    }
+  ],
+  "featuredDocs": [
+    "nextjs/introduction/app-router",
+    "nextjs/best-practices/server-components",
+    "nextjs/know-how/data-fetching"
+  ],
+  "quickLinks": [
+    {
+      "title": "Create Next App",
+      "href": "/docs/nextjs/introduction/installation",
+      "icon": "📦"
+    },
+    {
+      "title": "App Router",
+      "href": "/docs/nextjs/introduction/app-router",
+      "icon": "🗺️"
+    },
+    {
+      "title": "Server Components",
+      "href": "/docs/nextjs/best-practices/server-components",
+      "icon": "🔧"
+    },
+    {
+      "title": "API Routes",
+      "href": "/docs/nextjs/know-how/api-routes",
+      "icon": "🔌"
+    }
+  ],
+  "status": "stable",
+  "popularity": 98,
+  "lastUpdated": "2024-01-10",
+  "prerequisites": [
+    {
+      "name": "React",
+      "href": "/docs/react/introduction/getting-started",
+      "required": true
+    },
+    {
+      "name": "TypeScript",
+      "href": "/docs/typescript/introduction/basics",
+      "required": false
+    }
+  ]
+}

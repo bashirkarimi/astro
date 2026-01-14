@@ -6,6 +6,7 @@ author: "Alex Morgan"
 tags: ["astro", "data-modeling"]
 draft: false
 slug: "data-modeling"
+image: "../../images/software-testing-code-quality.jpg"
 ---
 
 

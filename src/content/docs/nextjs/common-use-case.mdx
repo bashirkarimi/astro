@@ -1,0 +1,29 @@
+---
+title: "Common Use Cases"
+description: "Real-world scenarios where Next.js is frequently applied, with example types and design considerations."
+technology: "next.js"
+category: "core features"
+order: 1
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["Next.js", "use cases"]
+---
+
+
+## Common Use Cases
+
+Below are real‑world scenarios where Next.js is frequently applied, along with matching example types and design‑considerations.
+
+| Use Case | Description | Why Next.js fits | Example |
+| --- | --- | --- | --- |
+| **Marketing sites / corporate websites / landing pages** | Sites with heavy emphasis on SEO, fast load times, mostly content‑driven. | Next.js’s SSG/ISR/SSR options make pages fast and SEO‑friendly. ([Leobit](https://leobit.com/blog/overview-of-next-js-for-modern-web-apps-pros-cons-and-use-cases/?utm_source=chatgpt.com)) | A product launch microsite built with Next.js + headless CMS, pre‑rendered pages, fast loading on mobile. |
+| **Content hubs / blogs / documentation portals** | A large volume of pages, perhaps frequent updates, reader‑focused. | Next.js supports static generation at build time, and ISR allows updating without full rebuild. ([Stack Five](https://www.stackfive.io/work/nextjs/10-practical-use-cases-for-next-js?utm_source=chatgpt.com)) | A developer docs site: thousands of articles, search, filter, fast navigation. |
+| **E‑commerce & storefronts** | Sites with dynamic product pages, user‑sessions, personalization, high‑traffic spikes. | Next.js supports hybrid rendering (SSR for dynamic parts, SSG/ISR for many pages), edge functions, routing, etc. ([Leobit](https://leobit.com/blog/overview-of-next-js-for-modern-web-apps-pros-cons-and-use-cases/?utm_source=chatgpt.com)) | An online store where product pages are server‑rendered (for personalization) while category pages are statically generated and cached. |
+| **Dashboards, internal admin panels, SaaS products** | Applications needing complex UI, frequent data updates, reactive components, sometimes with global scale. | Next.js integrates React UI, API routes, server logic, and supports both client/server boundaries, making full‑stack scenarios feasible. ([pagepro.co](https://pagepro.co/blog/what-is-nextjs/?utm_source=chatgpt.com)) | A SaaS analytics dashboard built in Next.js: server‑fetches summary data, client widgets for live updates. |
+| **High‑performance, global scale apps** | Applications targeted at many regions / devices (mobile, low bandwidth), or requiring edge distribution. | Next.js supports Edge runtime, SSR/streaming, prefetching, image optimization, etc. ([Stack Five](https://www.stackfive.io/work/nextjs/10-practical-use-cases-for-next-js?utm_source=chatgpt.com)) | A media platform or streaming front‑end built on Next.js, optimized for mobile, heavy traffic, CDN‑cacheable. |
+
+**Additional design considerations:**
+
+- Even within one project, you may apply multiple rendering strategies: e.g., static for most pages, SSR for user‑specific parts, CSR for UI widgets.
+- Use of ISR (Incremental Static Regeneration) allows static pages to be updated “incrementally” without a full site rebuild.
+- Prefetching, code‑splitting, image/font optimization are usually “built‑in” but you must architect pages carefully to avoid oversized bundles.

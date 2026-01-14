@@ -1,0 +1,95 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import { BookOpen, ArrowRight } from "@lucide/astro";
+import Layout from "@/layouts/layout.astro";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import Hero from "@/components/ui/hero.astro";
+import Button from "@/components/ui/button.astro";
+
+const allDocs: CollectionEntry<"docs">[] = await getCollection("docs");
+const technologies = [...new Set(allDocs.map((doc) => doc.data.technology))];
+
+const categoryOrder = [...new Set(allDocs.map((doc) => doc.data.category))];
+
+function sortDocs(a: CollectionEntry<"docs">, b: CollectionEntry<"docs">) {
+  return (
+    (a.data.order ?? 0) - (b.data.order ?? 0) ||
+    a.data.title.localeCompare(b.data.title)
+  );
+}
+
+const docsByTech = technologies.map((technology) => {
+  const techDocs = allDocs.filter((doc) => doc.data.technology === technology);
+
+  const categories = categoryOrder.map((category) => {
+    const docs = techDocs
+      .filter((doc) => doc.data.category === category)
+      .sort(sortDocs);
+
+    return { category, docs };
+  });
+
+  return { technology, categories };
+});
+---
+
+<Layout
+  title="Developer Documentation"
+  description="Everything you need to build amazing applications"
+>
+  <Hero
+    title="Developer Documentation"
+    subtitle=" "
+    description="Comprehensive guides, overviews and best practices—all in one place."
+    features={["50+ Guides", "100+ Code Examples", "Always Up-to-date"]}
+  />
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {
+      docsByTech.map(({ technology, categories }) => (
+        <Card as="section" aria-labelledby={`${technology}-heading`}>
+          <div class="p-6 flex flex-col gap-6">
+            <CardHeader class="flex gap-4 items-center">
+              <div class="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+                <BookOpen class="w-5 h-5 text-accent" />
+              </div>
+              <CardTitle>
+                <h2 class="heading-card capitalize">{technology}</h2>
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent class="p-0 flex flex-col gap-6">
+              {categories.every((c) => c.docs.length === 0) ? (
+                <p class="body-small">No documentation yet.</p>
+              ) : (
+                categories.map(({ category, docs }) =>
+                  docs.length === 0 ? null : (
+                    <div>
+                      <h3 class="heading-small mb-3 capitalize">{category}</h3>
+                      <ul class="space-y-2">
+                        {docs.map((doc) => (
+                          <li>
+                            <Button
+                              variant="ghost"
+                              size="md"
+                              href={`/docs/${doc.slug}`}
+                              class="justify-between! w-full group"
+                            >
+                              {doc.data.title}
+                              <ArrowRight class="w-5 h-5 text-muted-foreground group-hover:text-accent" slot="icon-right" />
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ),
+                )
+              )}
+            </CardContent>
+          </div>
+        </Card>
+      ))
+    }
+  </div>
+</Layout>

@@ -1,0 +1,51 @@
+---
+import Layout from "../layouts/layout.astro";
+import Button from "@/components/ui/button.astro";
+import Badge from "@/components/ui/badge.astro";
+---
+
+<Layout title="Home Page">
+  <h1>Welcome to the Home Page</h1>
+
+  <Button size="sm">Small</Button>
+  <Button size="md">Medium</Button>
+  <Button size="lg">Large</Button>
+  <Button>default</Button>
+
+  <Button>
+    <svg
+      slot="icon-left"
+      class="h-4 w-4"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path d="M5 12h14"></path>
+    </svg>
+    Continue
+  </Button>
+  <Button variant="outline"> outline </Button>
+  <Button variant="secondary">
+    Next
+    <svg
+      slot="icon-right"
+      class="h-4 w-4"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path d="M5 12h14"></path>
+    </svg>
+  </Button>
+
+  <Button size="sm" aria-label="Close">
+    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6 6l12 12M6 18L18 6"></path>
+    </svg>
+  </Button>
+
+  <p>Tages</p>
+  <Badge variant="default"> Default </Badge>
+  <Badge variant="default" size="sm"> Default Small </Badge>
+  <Badge variant="outline" size="md"> Outline Medium </Badge>
+  <Badge variant="secondary" size="lg"> Secondary Large </Badge>
+  <Badge variant="destructive" size="md"> Destructive Medium </Badge>
+</Layout>

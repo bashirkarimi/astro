@@ -1,10 +1,11 @@
 ---
 export interface Props {
-  variant?: "primary" | "outline" | "secondary" | "link";
+  variant?: "primary" | "outline" | "secondary" | "ghost" | "link";
   size?: "sm" | "md" | "lg";
   type?: "button" | "submit" | "reset";
   href?: string;
   disabled?: boolean;
+  class?: string;
 }
 
 const {
@@ -13,6 +14,7 @@ const {
   type = "button",
   href,
   disabled = false,
+  class: className = "",
 } = Astro.props;
 
 const baseClasses =
@@ -23,6 +25,7 @@ const variants = {
   outline:
     "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
   secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+  ghost: "hover:bg-secondary hover:text-secondary-foreground",
   link: "text-primary underline-offset-4 hover:underline",
 };
 
@@ -35,7 +38,7 @@ const sizes = {
 // Links usually shouldn’t have padding
 const sizeClasses = variant === "link" ? "" : sizes[size];
 
-const classes = `${baseClasses} ${variants[variant]} ${sizeClasses}`;
+const classes = `${baseClasses} ${variants[variant]} ${sizeClasses} ${className}`;
 ---
 
 {

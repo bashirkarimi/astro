@@ -3,8 +3,20 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
 const blogCollection: CollectionEntry<"blogs">[] = await getCollection("blogs");
-import { Calendar, ArrowUpRight } from "@lucide/astro";
+import { Calendar, ArrowRight } from "@lucide/astro";
 import placeHolderImage from "../images/placeholder.svg";
+
+const tagsCount = new Map<string, number>();
+blogCollection.forEach((post) => {
+  post.data.tags?.forEach((tag) =>
+    tagsCount.set(tag, (tagsCount.get(tag) ?? 0) + 1),
+  );
+});
+
+const allTags = Array.from(tagsCount.entries());
+const allAuthors = Array.from(
+  new Set(blogCollection.map((post) => post.data.author)),
+)
 
 import Layout from "../layouts/layout.astro";
 import {
@@ -15,53 +27,107 @@ import {
   CardFooter,
   CardAction,
 } from "@/components/ui/card";
-console.log(placeHolderImage);
+import Badge from "@/components/ui/badge.astro";
+import Button from "@/components/ui/button.astro";
+import Hero from "@/components/ui/hero.astro";
 ---
 
 <Layout title="Blog Posts">
   <div>
-    <h1>Blog Posts</h1>
-    <div class="flex flex-col gap-6 mt-6">
-      {
-        blogCollection.map((post) => (
-          
-          <a href={`/pages/${post.slug}`}>
-            <Card class="grid md:grid-cols-[240px_1fr]">
-              <div class="relative overflow-hidden bg-muted">
-                <Image
-                  src={post.data.image ?? placeHolderImage}
-                  alt={post.data.title}
-                  sizes="(max-width: 768px) 680px, 240px"
-                  class="object-cover aspect-4/3 md:aspect-square group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <div class="flex flex-col pb-6 md:py-6 px-6 ">
-                <CardHeader>
-                  <CardTitle>
-                    <h3 class="text-2xl font-semibold mb-3 group-hover:text-accent transition-colors text-balance">
-                      {post.data.title}
-                    </h3>
-                  </CardTitle>
-                  <CardAction>
-                    <ArrowUpRight class="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" />
-                  </CardAction>
-                </CardHeader>
-                <CardContent>
-                  <p class="text-muted-foreground leading-relaxed mb-4 text-pretty">
-                    {post.data.description}
-                  </p>
-                </CardContent>
-                <CardFooter class="flex items-center gap-4 text-sm text-muted-foreground mt-auto">
-                  <span class="flex items-center gap-1.5">
-                    <Calendar class="w-4 h-4" />
-                    {post.data.pubDate.toDateString()}
-                  </span>
-                </CardFooter>
-              </div>
-            </Card>
-          </a>
-        ))
-      }
+    <Hero
+    title="Blogs for Frontend Developer"
+    description="All the resources you need for Frontend."
+    features={["React", "Next.js", "Astro"]}
+  />
+    <div class="grid lg:grid-cols-[1fr_280px] gap-12 my-12 lg:my-16">
+      <div class="flex flex-col gap-6">
+        {
+          blogCollection.map((post) => (
+            <a href={`/pages/${post.slug}`} class="group">
+              <Card class="grid md:grid-cols-[240px_1fr]">
+                <div class="relative overflow-hidden">
+                  <Image
+                    src={post.data.image ?? placeHolderImage}
+                    alt={post.data.title}
+                    sizes="(max-width: 768px) 680px, 240px"
+                    class="object-cover aspect-4/3 md:aspect-square group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div class="flex flex-col pb-6 md:py-6 px-6 md:pl-0">
+                  <CardHeader>
+                    <CardTitle>
+                      <h3 class="text-2xl font-semibold mb-3 group-hover:text-accent transition-colors text-balance">
+                        {post.data.title}
+                      </h3>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {post.data.tags && (
+                      <div class="flex gap-2 mb-4">
+                        {post.data.tags.map((tag) => (
+                          <Badge variant="outline" size="sm">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                    <p class="text-muted-foreground leading-relaxed mb-4 text-pretty">
+                      {post.data.description}
+                    </p>
+                  </CardContent>
+                  <CardFooter class="flex items-center gap-4 text-sm text-muted-foreground mt-auto">
+                    <span class="flex items-center gap-1.5 text-xs">
+                      <Calendar class="w-4 h-4" />
+                      {post.data.pubDate.toDateString()}
+                    </span>
+                    <CardAction class="ml-auto">
+                      <ArrowRight class="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" />
+                    </CardAction>
+                  </CardFooter>
+                </div>
+              </Card>
+            </a>
+          ))
+        }
+      </div>
+      <aside>
+        <Card class="p-6">
+          <h3 class="font-semibold mb-4">Categories</h3>
+          <div class="space-y-2 flex flex-col">
+            {
+              allTags.map(([tag, count]) => (
+                <Button
+                  variant="ghost"
+                  size="md"
+                  href={`/tags/${tag}`}
+                  class="justify-between!"
+                >
+                  <span class="capitalize">{tag}</span>
+                  <span class="text-xs text-muted-foreground">{count}</span>
+                </Button>
+              ))
+            }
+          </div>
+        </Card>
+        <Card class="p-6 mt-6">
+          <h3 class="font-semibold mb-4">Authors</h3>
+          <div class="space-y-2 flex flex-col">
+            {
+              allAuthors.map((author) => (
+                <Button
+                  variant="ghost"
+                  size="md"
+                  href={`/authors/${author}`}
+                  class="justify-between! group"
+                >
+                  <span class="capitalize">{author}</span>
+                  <ArrowRight class="w-5 h-5 text-muted-foreground group-hover:text-accent" slot="icon-right" />
+                </Button>
+              ))
+            }
+          </div>
+        </Card>
+      </aside>
     </div>
   </div>
 </Layout>

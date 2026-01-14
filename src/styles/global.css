@@ -75,9 +75,8 @@
 }
 
 @theme inline {
-  --font-sans: "Inter", "Inter Fallback", system-ui, -apple-system, sans-serif;
-  --font-mono:
-    "JetBrains Mono", "JetBrains Mono Fallback", "Consolas", monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -122,19 +121,76 @@
   }
 
   body {
+    @apply font-sans;
     @apply bg-background text-foreground;
   }
 
-  h1 {
-    @apply text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight;
+  code,
+  pre {
+    @apply font-mono;
+  }
+}
+
+@layer components {
+  /* Heading Styles */
+  .heading-hero {
+    @apply text-5xl lg:text-7xl font-bold tracking-tight text-balance leading-[1.1];
   }
 
-  h2 {
-    @apply text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight;
+  .heading-page {
+    @apply text-4xl lg:text-5xl font-bold tracking-tight text-balance;
   }
 
-  h3 {
-    @apply text-xl sm:text-2xl lg:text-3xl font-semibold;
+  .heading-section {
+    @apply text-3xl lg:text-4xl font-bold tracking-tight;
+  }
+
+  .heading-card {
+    @apply text-2xl font-semibold text-balance;
+  }
+
+  .heading-subsection {
+    @apply text-xl font-semibold text-balance;
+  }
+
+  .heading-small {
+    @apply text-lg font-semibold;
+  }
+
+  /* Interactive Heading (for clickable cards) */
+  .heading-interactive {
+    @apply transition-colors group-hover:text-accent;
+  }
+
+  /* Body Text Styles */
+  .body-large {
+    @apply text-lg leading-relaxed text-muted-foreground;
+  }
+
+  .body-base {
+    @apply text-base leading-relaxed;
+  }
+
+  .body-small {
+    @apply text-sm leading-relaxed text-muted-foreground;
+  }
+
+  /* Metadata/Caption Text */
+  .text-caption {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* Article Prose - for rich content */
+  .prose-article {
+    @apply prose prose-lg max-w-none;
+    @apply prose-headings:font-bold prose-headings:tracking-tight;
+    @apply prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6;
+    @apply prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-4;
+    @apply prose-p:leading-relaxed prose-p:text-foreground/90;
+    @apply prose-a:text-accent prose-a:no-underline hover:prose-a:underline;
+    @apply prose-strong:text-foreground prose-strong:font-semibold;
+    @apply prose-code:text-accent prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded;
+    @apply prose-pre:bg-muted prose-pre:border prose-pre:border-border;
   }
 }
 

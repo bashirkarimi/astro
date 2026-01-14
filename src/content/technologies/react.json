@@ -1,0 +1,75 @@
+{
+  "id": "react",
+  "name": "React",
+  "displayName": "React",
+  "tagline": "A JavaScript library for building user interfaces",
+  "description": "React makes it painless to create interactive UIs. Design simple views for each state in your application.",
+  "version": "18.2",
+  "logo": {
+    "light": "/logos/react-light.svg",
+    "dark": "/logos/react-dark.svg",
+    "icon": "⚛️"
+  },
+  "colors": {
+    "primary": "#61DAFB",
+    "secondary": "#282C34",
+    "accent": "#61DAFB"
+  },
+  "officialLinks": {
+    "website": "https://react.dev",
+    "docs": "https://react.dev/learn",
+    "github": "https://github.com/facebook/react",
+    "twitter": "https://twitter.com/reactjs"
+  },
+  "categories": [
+    {
+      "id": "introduction",
+      "title": "Getting Started",
+      "icon": "🚀",
+      "description": "Learn React fundamentals",
+      "order": 1,
+      "color": "#10b981"
+    },
+    {
+      "id": "best-practices",
+      "title": "Best Practices",
+      "icon": "⚡",
+      "description": "Write clean, maintainable React code",
+      "order": 2,
+      "color": "#f59e0b"
+    },
+    {
+      "id": "know-how",
+      "title": "Know-How",
+      "icon": "🎓",
+      "description": "Advanced React patterns",
+      "order": 3,
+      "color": "#3b82f6"
+    }
+  ],
+  "featuredDocs": [
+    "react/introduction/components",
+    "react/best-practices/hooks",
+    "react/know-how/performance-optimization"
+  ],
+  "quickLinks": [
+    {
+      "title": "Your First Component",
+      "href": "/docs/react/introduction/components",
+      "icon": "🧩"
+    },
+    {
+      "title": "Hooks at a Glance",
+      "href": "/docs/react/introduction/hooks",
+      "icon": "🪝"
+    },
+    {
+      "title": "State Management",
+      "href": "/docs/react/know-how/state-management",
+      "icon": "🔄"
+    }
+  ],
+  "status": "stable",
+  "popularity": 100,
+  "lastUpdated": "2024-01-09"
+}

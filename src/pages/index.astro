@@ -1,45 +1,13 @@
 ---
 import Layout from "../layouts/layout.astro";
-import Button from "@/components/ui/button.astro";
+import Hero from "@/components/ui/hero.astro";
 ---
 
 <Layout title="Home Page">
-  <h1>Welcome to the Home Page</h1>
+  <Hero
+    title="Build better learn faster"
+    description="All the resources you need for Frontend."
+    features={["React", "Next.js", "Astro"]}
+  />
 
-  <Button size="sm">Small</Button>
-  <Button size="md">Medium</Button>
-  <Button size="lg">Large</Button>
-  <Button>default</Button>
-
-  <Button>
-    <svg
-      slot="icon-left"
-      class="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M5 12h14"></path>
-    </svg>
-    Continue
-  </Button>
-  <Button variant="outline">
-    outline
-  </Button>
-  <Button variant="secondary">
-    Next
-    <svg
-      slot="icon-right"
-      class="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M5 12h14"></path>
-    </svg>
-  </Button>
-
-  <Button size="sm" aria-label="Close">
-    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M6 6l12 12M6 18L18 6"></path>
-    </svg>
-  </Button>
 </Layout>

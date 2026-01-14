@@ -1,0 +1,95 @@
+---
+title: "Architecture and Core Concepts"
+description: "An overview of the advantages and challenges when using React."
+technology: "react"
+category: "core features"
+order: 2
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["react", "architecture"]
+---
+
+
+React’s modern architecture emphasizes declarative UI, composability, and state isolation through **function components** and **Hooks**. Key concepts include function components, Hooks, and unidirectional data flow. Understanding these is crucial for designing scalable, maintainable React applications.
+
+### **Component-Based Architecture**
+
+React applications are built from **function components** — isolated, reusable building blocks that output UI based on input and internal state. Each component typically:
+
+- **Accepts props:** External data or configuration is passed in via props (properties). These are like function arguments. They make components reusable with different data.
+- **Manages state:** Components can hold internal state (using Hooks like `useState` or `useReducer`). State is data that changes over time (user input, fetched data, UI toggles, etc.).
+- **Renders UI:** The component returns a description of the UI (usually via JSX) based on props and state.
+
+This modular design encourages **composition**: components are small, testable, and can be combined to build complex interfaces while maintaining clear data flow.
+
+### **Declarative Rendering**
+
+In React, you write **declarative** components that describe *what* the UI should be for given states. If the state changes, you simply re-render (by updating state) and let React determine how to update the DOM. This is in contrast to imperative DOM manipulation (like using jQuery to find and update elements). For example, if you have a list component that depends on a piece of state, you don’t manually add or remove DOM `<li>` elements when the state changes. Instead, your render output includes something like `{items.map(item => <li key={item.id}>{item.text}</li>)}` and if `items` changes, React re-invokes the render and updates the DOM to match the new list. 
+This approach has several benefits: UIs are easier to reason about (since they’re a pure function of state/props), and React can optimize DOM updates thanks to the Virtual DOM diffing. The developer focuses on describing the UI for each state, and React handles the efficient mutation of the DOM. This dramatically reduces the chance for bugs related to inconsistent UI, forgotten updates, or complex DOM traversal code.
+
+### **Virtual DOM & Reconciliation**
+
+React maintains an in-memory representation of the DOM called the **Virtual DOM (VDOM)**. When state or props change:
+
+- **Re-render** the component (and its children) in memory, producing a new virtual DOM tree of React elements.
+- **Diff** the new virtual DOM tree against the previous virtual DOM tree.
+- **Apply minimal updates** to the real DOM based on the diff. If a component’s output hasn’t changed, the real DOM is untouched. If only a single element changed text, only that text node is updated in the DOM, and so on.
+    
+    This process is called **reconciliation**, and it’s central to React’s performance model.
+    
+
+React 18 introduced concurrent rendering features (like `useTransition`) to make updates smoother and interruptible.
+
+It’s worth noting that React’s diffing algorithm makes some trade-offs for speed. It assumes component subtrees with different types (different component or DOM tag) can’t be matched, and it keys list items by a supplied `key` prop to match elements between renders. Under the hood, React 18+ uses a “fiber” architecture that breaks rendering work into units that can be paused and resumed, enabling the concurrent rendering features mentioned earlier. For day-to-day development, you mostly don’t need to worry about these internals, but they enable React’s hallmark efficiency.
+
+### **Hooks: The Core Primitive for State & Side Effects**
+
+Hooks are React’s core API for adding logic and lifecycle behavior to function components — replacing class methods.
+
+They let you **“hook into”** React features directly within functional code. Hooks encourage **logic reuse** through **custom hooks**, promoting cleaner and more modular architecture.
+
+**Categories of Hooks:**
+
+| Category | Examples | Purpose |
+| --- | --- | --- |
+| **State Hooks** | `useState`, `useReducer` | Manage local component state (e.g., form inputs, toggles). `useReducer` is handy for complex state logic or when a Redux-like reducer pattern is desired. |
+| **Effect Hooks** | `useEffect`, `useLayoutEffect` | Run side effects at the appropriate time. For example, `useEffect` can fetch data or set up event listeners after render. (React runs effects after flushing changes to the DOM.) `useLayoutEffect` runs earlier (after DOM mutation but before paint) and is used for measuring DOM nodes or synchronously re-rendering (rare cases). |
+| **Memoization Hooks** | `useMemo`, `useCallback` | Optimize performance by memoizing values or functions. `useMemo` recomputes an expensive value only when its dependencies change (caching the result), and `useCallback` memoizes a function definition so that it doesn’t change on every render. These help avoid unnecessary re-renders of child components or expensive calculations. |
+| **Ref Hooks** | `useRef`, `useImperativeHandle` | Access and persist mutable values that survive re-renders, or access DOM elements. For example, `useRef` can hold a reference to an `<input>` element so you can focus it programmatically, or hold an interval ID. `useImperativeHandle` lets custom component hooks expose imperative methods when used with `React.forwardRef`. |
+| **Context Hook** | `useContext` | Access a React Context value from a functional component, allowing you to subscribe to global data. This avoids having to use a Context Consumer component and makes using Context more ergonomic. |
+
+### **Unidirectional Data Flow**
+
+React’s data flow is one-way by design. Parent components pass data to children through props. Children **do not** directly modify the data in the parent or elsewhere; they only call functions (props callbacks or context updaters) to signal intent. This is often summarized as *“**properties down, events up**.”* Such unidirectional flow might seem restrictive compared to two-way binding, but it greatly simplifies the mental model: any given piece of state lives in one place (a specific component or possibly a context store) and flows down to any components that need it.
+
+This makes component interactions easier to trace and debug.
+
+If two sibling components need to share state, the recommended pattern is to **lift the state up** to their nearest common parent. That parent holds the state and passes it down to both siblings via props. The siblings can each receive the data and also receive callback props to request changes. The lifted state in the parent becomes the “single source of truth” for those child components. Any update goes through the parent, ensuring consistency.
+
+For broader state that spans many parts of the app (e.g. user authentication info, theme settings), you can use the **Context API** to provide and consume values deep in the tree without threading props through every level. Context still respects one-way flow (data is provided at a higher level and consumed below). However, too much context or using it for frequently changing data can lead to performance issues (many components re-rendering). Often, a combination of local state (for local concerns) and context or external stores (for global concerns) is used.
+
+In summary, one-way data flow makes the app more predictable: you can follow the path of any piece of data and be confident that updates happen in a controlled top-down manner.
+
+For global or shared state, tools like the **Context API** or libraries like **Zustand** and **Redux Toolkit** integrate naturally with Hooks.
+
+---
+
+### Concurrency and Modern React
+
+React 18’s **Concurrent Rendering** features deserve a mention in the architecture. Traditionally, React updates were synchronous within the event loop – once an update started rendering, it would block until complete. With concurrent features, React can start rendering an update, pause if the browser needs to handle a high-priority event (like user input), and resume later. It can even abandon a partially rendered update if a newer update supersedes it. This is enabled by the internal “fiber” architecture.
+
+From a developer’s perspective, concurrency introduced new APIs:
+
+- `useTransition()` for marking state updates as “transition” (non-urgent), so React can delay them if more urgent work (like responding to a key press) is pending.
+- `Suspense` for data fetching: React can start rendering a tree, see that some data isn’t ready (a component thrown a Promise), and pause rendering that part, showing a fallback (like a spinner) until the data is loaded, then continue. This allows smoother loading states and is leveraged heavily in frameworks like Next.js for async server components.
+- Automatic batching (as noted earlier): in React 18+, state updates from any event loop (including timeouts, promises, native event handlers, etc.) are batched together by default. This reduces needless re-renders.
+
+These features aim to improve user experience by making updates more efficient and avoiding janky behavior during intensive rendering.
+
+### **Composition Over Inheritance**
+
+React prefers **composition** (nesting and prop passing) over **inheritance**.  It’s almost always better to compose components (i.e., have one render the other) than to subclass them. For example, rather than subclassing a generic `Button` component to create `PrimaryButton` and `SecondaryButton` classes, you would more likely have a single `Button` component that takes a “variant” prop, or you wrap a `Button` in a higher-level component if needed. React’s creators have said they haven’t found a practical need for component inheritance in their codebase. Instead, **higher-order components (HOCs)** and **render props** patterns emerged to share behavior (before Hooks existed), and now Hooks serve that purpose for sharing logic.
+
+React’s composition model also means you can build **container components** (that handle data fetching and state) and **presentational components** (that just display props) to separate concerns. This isn’t mandated by the library, but it’s a common pattern.
+
+In summary, components in React are lego blocks. By focusing on composition, we get flexibility and clear data flow, which aligns with React’s core design principles.
