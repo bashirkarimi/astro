@@ -8,9 +8,8 @@ import Hero from "@/components/ui/hero.astro";
 import Button from "@/components/ui/button.astro";
 
 const allDocs: CollectionEntry<"docs">[] = await getCollection("docs");
-const technologies = [...new Set(allDocs.map((doc) => doc.data.technology))];
-
-const categoryOrder = [...new Set(allDocs.map((doc) => doc.data.category))];
+const technologies = Array.from(new Set(allDocs.map((doc) => doc.data.technology)));
+const categoryOrder = Array.from(new Set(allDocs.map((doc) => doc.data.category)));
 
 function sortDocs(a: CollectionEntry<"docs">, b: CollectionEntry<"docs">) {
   return (
