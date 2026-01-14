@@ -10,6 +10,7 @@ import {
   CardContent,
 
 } from "@/components/ui/card";
+import Hero from "@/components/ui/hero.astro";
 
 
 const allDocs: CollectionEntry<"docs">[] = await getCollection("docs");
@@ -47,13 +48,12 @@ const docsByTech = technologies.map((technology) => {
   title="Developer Documentation"
   description="Everything you need to build amazing applications"
 >
-  <div class="hero">
-    <h1 class="heading-page">Developer Documentation</h1>
-    <p>
-      Everything you need to build amazing applications. Comprehensive guides,
-      API references, and best practices all in one place.
-    </p>
-  </div>
+  <Hero 
+    title="Developer Documentation"
+    subtitle=" "
+    description="Comprehensive guides, overviews and best practices—all in one place."
+    features={["50+ Guides", "100+ Code Examples", "Always Up-to-date"]}
+  />
 
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
     {

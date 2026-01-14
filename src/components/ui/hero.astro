@@ -1,0 +1,36 @@
+---
+interface Props {
+  containerClass?: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  features?: Array<string>;
+}
+const { containerClass, title, subtitle, description, features } =
+  Astro.props as Props;
+---
+
+<div class={`relative max-w-7xl mx-auto py-10 lg:py-20 ${containerClass}`}>
+  <div class="max-w-3xl">
+    <h1 class="heading-hero mb-6">
+      {title}
+      <br />{subtitle && <span class="font-light">{subtitle}</span>}
+    </h1>
+
+    <p class="body-large mb-8 max-w-2xl">
+      {description}
+    </p>
+    {
+      features && (
+        <div class="flex flex-wrap gap-6 mt-10 text-sm">
+          {features.map((feature) => (
+            <div class="flex items-center gap-2 text-muted-foreground">
+              <div class="w-2 h-2 rounded-full bg-accent" />
+              <span>{feature}</span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</div>
