@@ -2,7 +2,8 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
-import { Calendar, ArrowRight } from "@lucide/astro";
+import { getReadingTime } from "@/lib/utils";
+import { Calendar, ArrowRight, Clock } from "@lucide/astro";
 import placeHolderImage from "@/images/placeholder.svg";
 import Layout from "@/layouts/layout.astro";
 import {
@@ -22,6 +23,7 @@ const blogCollection: CollectionEntry<"blogs">[] = (await getCollection("blogs")
 // Compute tags and authors once instead of on every render
 const tagsCount = new Map<string, number>();
 const authorsSet = new Set<string>();
+const readingTimes = new Map<string, number>();
 
 blogCollection.forEach((post) => {
   post.data.tags?.forEach((tag) =>
@@ -30,6 +32,10 @@ blogCollection.forEach((post) => {
   if (post.data.author) {
     authorsSet.add(post.data.author);
   }
+
+  // Calculate reading time for each post
+  const readingTime = getReadingTime(post.body);
+  readingTimes.set(post.slug, readingTime);
 });
 
 const allTags = Array.from(tagsCount.entries()).sort((a, b) => b[1] - a[1]);
@@ -87,6 +93,10 @@ const allAuthors = Array.from(authorsSet).sort();
                     <span class="flex items-center gap-1.5 text-xs">
                       <Calendar class="w-4 h-4" />
                       {post.data.pubDate.toDateString()}
+                    </span>
+                    <span class="flex items-center gap-1.5 text-xs">
+                      <Clock class="w-4 h-4" />
+                      {readingTimes.get(post.slug)} min to read
                     </span>
                     <CardAction class="ml-auto">
                       <ArrowRight class="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" />
