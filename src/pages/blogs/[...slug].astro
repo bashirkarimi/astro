@@ -3,6 +3,10 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import { Clock, Calendar, UserPen } from "@lucide/astro";
 import { Image } from "astro:assets";
+import { getReadingTime } from "@/lib/utils";
+import Layout from "@/layouts/layout.astro";
+import Badge from "@/components/ui/badge.astro";
+import TableOfContent from "@/components/ui/table-of-content.astro";
 
 export async function getStaticPaths() {
   const blogCollection: CollectionEntry<"blogs">[] =
@@ -14,14 +18,13 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
-import Layout from "@/layouts/layout.astro";
-import Badge from "@/components/ui/badge.astro";
+const { Content, headings } = await entry.render();
+const readingTime = getReadingTime(entry.body);
 ---
 
 <Layout title={entry.data.title}>
   <article>
-    <header class="max-w-4xl mx-auto px-6 pb-6 md:pb-12  border-b">
+    <header class="mx-auto pb-6 md:pb-12 border-b">
       <h1 class="heading-page mb-6">{entry.data.title}</h1>
       <div class="flex items-center gap-6 text-sm text-muted-foreground mb-8">
         <span class="flex items-center gap-2">
@@ -36,7 +39,7 @@ import Badge from "@/components/ui/badge.astro";
         </span>
         <span class="flex items-center gap-2">
           <Clock class="w-4 h-4" />
-          2 min read
+          {readingTime} min read
         </span>
         <span class="flex items-center gap-2">
           <UserPen class="w-4 h-4" /> By {entry.data.author}</span
@@ -57,6 +60,7 @@ import Badge from "@/components/ui/badge.astro";
         )
       }
     </header>
+
     {
       entry.data.image && (
         <div class="rounded-sm overflow-hidden mb-6">
@@ -68,9 +72,17 @@ import Badge from "@/components/ui/badge.astro";
         </div>
       )
     }
-
-    <div class="prose mx-auto py-6 md:py-8">
-      <Content />
+    <div class="grid lg:grid-cols-[1fr_280px] gap-8 lg:gap-12 mt-8 lg:mt-12">
+      <div class="prose mx-auto max-w-none w-full">
+        <Content />
+      </div>
+      {
+        headings.length > 1 && (
+          <aside class="hidden lg:block">
+            <TableOfContent headings={headings} />
+          </aside>
+        )
+      }
     </div>
   </article>
 </Layout>
