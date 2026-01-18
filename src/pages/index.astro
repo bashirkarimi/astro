@@ -32,7 +32,7 @@ const blogCollection: CollectionEntry<"blogs">[] = (
 
   <div>
     <h2 class="heading-section mb-6 md:mb-8">Astro</h2>
-    <div class="flex flex-col md:flex-row gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
       <div class="basis-1/4">
         <p>
           Astro is a modern static site builder that makes it easy to create
@@ -41,7 +41,8 @@ const blogCollection: CollectionEntry<"blogs">[] = (
       </div>
       {
         blogCollection.map((blog) => (
-          <Card class="basis-1/4">
+          <a href={`/blogs/${blog.slug}`} class="group">
+          <Card class="h-full">
             <CardHeader class="flex flex-col-reverse gap-4">
               <CardTitle class="px-4">{blog.data.title}</CardTitle>
               <div class="relative overflow-hidden">
@@ -49,7 +50,6 @@ const blogCollection: CollectionEntry<"blogs">[] = (
                   src={blog.data.image ?? placeHolderImage}
                   alt={blog.data.title}
                   densities={[1.5, 2]}
-                  // sizes="(max-width: 768px) 100vw, 240px"
                   class="object-cover w-full h-full aspect-4/3 md:aspect-video group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
@@ -66,6 +66,7 @@ const blogCollection: CollectionEntry<"blogs">[] = (
               </CardAction>
             </CardFooter>
           </Card>
+        </a>
         ))
       }
     </div>
