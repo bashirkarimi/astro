@@ -1,0 +1,19 @@
+---
+title: "Limitations and Trade-offs"
+description: "Understanding the limitations and trade-offs of using React."
+technology: "react"
+category: ""
+order: 7
+lastUpdated: 2026-01-10
+authors: ["john-doe"]
+tags: ["react", "limitations"]
+---
+
+React is powerful, but it isn’t a silver bullet. Understanding its trade-offs will help determine if it’s the right choice and how to mitigate any downsides:
+
+- **Library, Not Full Framework:** React focuses only on the UI layer. Features like routing, global state management (beyond basic Context), and form validation are not built-in and require separate libraries (React Router, Redux/MobX/useReducer, Formik/React Hook Form, etc.). This “unopinionated” approach gives flexibility but also means more choices and setup. As one source notes, *“It’s a Library, not Framework… its flexible nature can reduce code uniformity and makes it a bit difficult to understand code for developers unfamiliar with the project.”*. You must assemble various tools to build a complete app.
+- **JSX & Build Requirements:** React commonly uses JSX, which requires a build step (typically Babel) to transform into JavaScript. This setup can be unfamiliar to beginners and adds complexity. Some find JSX “tricky,” since it mixes HTML-like syntax with JS logic. (On the plus side, JSX is optional; you can write without it[legacy.reactjs.org](https://legacy.reactjs.org/docs/react-without-jsx.html#:~:text=JSX%20is%20not%20a%20requirement,compilation%20in%20your%20build%20environment), but most React codebases use JSX and modern toolchains.)
+- **Performance Overhead:** The Virtual DOM diff and React’s abstraction add overhead compared to raw DOM manipulation. For most apps this is negligible, but in very performance-critical contexts (e.g. VR/3D rendering, low-power devices) the abstraction cost might matter. Also, React apps rely on a relatively large JS runtime – initial bundle sizes should be managed (with code-splitting) to avoid slow first loads.
+- **Frequent Updates:** The React ecosystem moves quickly, with frequent releases and new features (hooks, concurrent mode, etc.). This pace can require continuous learning and occasional refactoring of code to adopt new APIs. One source mentions that “React gets updates too frequently, which requires developers to get familiar with all new evolvements and deprecations”.
+- **SEO & Accessibility:** By default, React apps are single-page, client-side rendered. Without additional measures (SSR or static rendering), search engines may have trouble indexing content. Also, developers must be mindful to manage focus and ARIA attributes for accessibility (as React doesn’t automatically handle those).
+- **State Management Complexity:** For very large apps, state management can become complex. While React’s Context and hooks handle local state well, some teams use external patterns (Redux, MobX) for very large shared state. (However, we exclude discussion of those per spec.)

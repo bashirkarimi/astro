@@ -1,0 +1,40 @@
+---
+title: "Common Patterns"
+description: "An overview of common patterns in React."
+technology: "react"
+category: ""
+order: 4
+lastUpdated: 2026-01-10
+authors: ["john-doe"]
+tags: ["react", "patterns"]
+---
+
+##  
+
+**Why it matters:** Over the years, the React community has developed patterns that lead to more consistent and maintainable code. Knowing these can help in architecting solutions that are idiomatic to React and easier for teams to work with.
+
+- **Controlled Components (Forms):** In React, form inputs typically have their value *controlled* by React state.  A “controlled component” is one where the rendered value comes from state, and user input triggers events to update that state.  The official docs state: *“An input form element whose value is controlled by React in this way is called a ‘controlled component’.”*.  For example:
+
+```jsx
+function NameForm() {
+  const [name, setName] = useState("");
+  return (
+    <input value={name} onChange={e=>setName(e.target.value)} />
+  );
+}
+```
+
+- **Component Composition:** React encourages **composition** to reuse code.
+  - **Containment via `props.children`:** You can create components that are essentially “layouts” and accept children. For example, a `<Dialog>` component might render a box with a title and `{props.children}` inside. Then you can use it like `<Dialog title="Welcome">Some content here</Dialog>` and it will render a standard dialog frame around whatever children you passed. This is a form of composition where a parent wraps arbitrary child content.
+  - **Specialized Components:** Another pattern is passing explicit components as props (sometimes called “slots”). E.g., a `<SplitPane>` component might accept `props.left` and `props.right` which themselves are React elements, allowing the parent to specify what to render in left and right pane sections.
+  - **Higher-Order Components (HOCs):** An older pattern (less common now with Hooks) where you create a function that takes a component and returns a new component with added props or behavior. For example, `withLogging(Component)` could be an HOC that returns a new component that logs when mounted and then renders the original component. HOCs were used extensively for cross-cutting concerns (like connecting to Redux store) in React’s class-component era. Now hooks and component composition have largely replaced many HOC use cases, but you’ll still encounter them in older code.
+  - **Render Props:** Another pattern (also pre-Hooks) where a component doesn’t directly render UI, but instead accepts a function as a child (the “render prop”) that it calls to produce the UI. This allowed sharing stateful logic by encapsulating it in a component and letting users of the component decide how to render something based on that state. For instance, a `<MouseTracker>` component could internally handle mouse events and pass the current `{x, y}` coordinates to a render prop function, which returns the actual UI to display. With Hooks, you can achieve the same by a `useMousePosition` custom hook, so render props are less common now, but they’re still an important concept historically.
+    
+  The key takeaway: **favor composition**. If you find yourself duplicating code or wanting to “extend” a component, think about breaking that logic into smaller components or hooks that can be composed together.
+    
+- **Lifting State Up:** When multiple components need to share the same data, React’s pattern is to “lift” the state to the closest common ancestor. For instance, if two sibling inputs need to stay in sync, you would move their state into their parent. The official example says: *“In React, sharing state is accomplished by moving it up to the closest common ancestor of the components that need it. This is called ‘lifting state up.’”*. The parent then passes the shared state down as props, and the children notify the parent to update it (via callbacks). This makes the parent component the “single source of truth” for the data, keeping siblings in sync.
+- **Render Props & HOCs:** (More advanced) Patterns like Render Props and Higher-Order Components allow sharing behavior between components. For example, a HOC is a function that takes a component and returns a new component with added props or logic. These patterns can be useful, but with hooks and simple composition, they are less needed in new code. Hooks themselves can factor out reusable logic (as custom hooks).
+- **Props Drilling vs Context:** When passing props deeply through many layers becomes cumbersome, consider either lifting state up differently or using context as discussed above. In many cases, simply passing necessary data/functions as props (sometimes via intermediate wrappers) is sufficient.
+- **State Management Libraries:** While React’s built-in state and context cover a lot, complex apps sometimes use external state libraries (Redux, MobX, Zustand, XState, etc.). A common pattern is to use React for local component state and use a dedicated library for more global or app-wide state, especially if it has complex logic or persistence requirements. The trend in recent years is to use simpler solutions (like the Context + Hooks or minimal state libraries) for global state and to push data syncing concerns to libraries like React Query (TanStack Query). We won’t dive deep into Redux here, but the pattern if you use it is to have a single store and dispatch actions – however, if you can manage with React context or smaller scoped state, that’s often preferable for simplicity.
+
+In modern React development, many patterns from older days (HOCs, render props, even Redux in some cases) are less prominent, because Hooks allow solving those problems more directly. For a mid-level or senior developer, familiarity with these patterns helps in reading older code and making architectural decisions, but one should also recognize when simpler Hook-based solutions can replace more convoluted patterns.

@@ -1,0 +1,29 @@
+---
+title: "Performance Optimization"
+description: "An overview of performance optimization techniques in React."
+technology: "react"
+category: ""
+order: 3
+lastUpdated: 2026-01-10
+authors: ["john-doe"]
+tags: ["react", "performance"]
+---
+
+**Why it matters:** React brings useful abstractions, but developers still need to manage render costs and bundle size.
+
+React is designed to be efficient by default, but there are common patterns to improve performance further:
+
+- **Use Production Builds:** Always use React’s production build (minified) in deployed apps. The development build includes extra checks and warnings, so only use it during development.
+- **Avoid Unnecessary Re-renders:** React will re-render a component whenever its parent renders, unless we optimize. Sometimes this is harmless, but if a component does heavy work or renders a large subtree, we should prevent needless updates:
+    - In function components, wrap the component in `React.memo()` to memoize its result. This is similar to a PureComponent for functional components – it will shallowly compare props and skip rendering if props haven’t changed.
+    - For callbacks passed to child components, consider wrapping them in `useCallback` (or define them outside render) so that they aren’t re-created on every render. This prevents child components (that rely on referential equality of props) from re-rendering.
+    - If passing objects or arrays as props, either derive them in children or memoize them (`useMemo`) so that you’re not passing a new object on each render (again, to allow shallow comparisons to work).
+- **Immutable Data:** Embrace immutability for state updates. If you mutate objects/arrays in state, React might not detect a change (if the reference stays the same) and even if it does, comparing complex objects deeply is expensive. Instead, update state by creating new objects/arrays (e.g. use spread `{...oldObj, newProp: X}` or array methods like `concat`/`slice` instead of `push`). This way, you can leverage cheap **shallow equality** checks to skip re-renders.
+- **Profile and Memoize Expensive Computations:** If you have a slow calculation in your render, use `useMemo` to memoize its result. For example, `const result = useMemo(() => heavyCalc(data), [data])` will recompute only when `data` changes, caching the result otherwise. Similarly, `useCallback` can memoize event handlers so they don’t trigger re-renders of children unnecessarily. Be careful not to overuse these – **memoization itself has a cost** – but they can be valuable when you’ve identified bottlenecks.
+- **Code-Splitting and Lazy Loading:** React supports lazy-loading components via `React.lazy` and `<Suspense>`. You can write `const Other = React.lazy(() => import('./OtherComponent'));` to split that component into a separate JS chunk. The first time `<Other/>` is rendered, React will load its code asynchronously. You must wrap lazy components in `<Suspense fallback={...}>`, which shows a fallback (e.g. loading spinner) while the code loads. This approach keeps initial bundles smaller and delays loading code until needed, improving startup performance.
+- **Windowing/Virutalization for Large Lists:** Rendering very large lists (hundreds or thousands of DOM nodes) can be slow. If you have long scrollable lists, consider using a list virtualization library like **react-window** or **react-virtuoso**. These render only the visible items to the DOM, recycling DOM nodes as you scroll. This dramatically reduces the DOM node count and improves performance for large lists.
+- **Virtual DOM Efficiency:** React’s Virtual DOM itself is already an optimization. React “maintains an internal representation of the UI” to minimize direct DOM manipulation. Still, reducing unnecessary rendering is key (e.g. putting a large list behind a conditional, or using virtualization libraries for very long lists).
+- **Throttling and Debouncing:** For performance in scenarios like handling continuous events (window resize, scroll, typing), it’s often useful to throttle or debounce the state updates so that React isn’t trying to re-render on every single tiny event. This isn’t specific to React, but general web performance hygiene. For instance, if you have a search input that filters a list on every keystroke, debouncing the update can prevent dozens of renders per second.
+- **DevTools and Profiler:** Use the React Developer Tools Profiler to identify slow components or excessive re-renders. In code, keep components simple and try to avoid deep update chains that trigger many re-renders.
+
+In summary, React provides a solid foundation for performance (with its VDOM and optimizations), but developers must use the tools and patterns (memoization, code-splitting, etc.) to ensure the app stays fast as it grows. “Measure, then optimize” is key – profile the app to find bottlenecks, then address them with targeted techniques like `React.memo` or `useMemo` where appropriate.

@@ -1,0 +1,38 @@
+---
+title: "Guidance for architects and devs"
+description: "Practical, actionable guidance for architects and developers working with React."
+technology: "react"
+category: ""
+order: 6
+lastUpdated: 2026-01-10
+authors: ["john-doe"]
+tags: ["react", "guidance"]
+---
+
+
+### State management: pragmatic rules
+
+- Use **local state + Context** for UI concerns (modal open, theme).
+- Use **server-state libraries** (TanStack Query / SWR) for cached async data with invalidation and background refresh semantics.
+- Use **global state libraries** (Zustand, ReduxToolkit, Jotai) only when multiple unrelated parts of the app need synchronized state or complex persistence/undo features.
+- Avoid Context as a general-purpose pub-sub: it causes re-renders unless you partition providers or memoize heavy consumers.
+
+### Partitioning client vs server
+
+- Identify components by three questions:
+    1. Does this component require browser-only APIs (DOM events, localStorage, device sensors)?
+    2. Does it need to be interactive?
+    3. Can data fetch and render be done server-side without harming interactivity?
+- If answers are (1) or (2) → client component. If not → server component candidate.
+
+### Performance-first habits
+
+- Measure first: use React DevTools Profiler and RUM data.
+- Keep props shallow and stable: avoid passing freshly-created objects/inline functions unless memoized.
+- Virtualize long lists (react-window/react-virtuoso) and lazy-load route chunks and heavy widgets (React.lazy + Suspense).
+- Minimize hydration surface: prefer server-rendered static content over hydrating many tiny interactive controls.
+
+### Data fetching & caching
+
+- Prefer co-located fetch logic for Server Components; for client components prefer cache-aware libraries that handle stale-while-revalidate.
+- For mutations: decide between server-handled actions (server-first forms) vs client optimistic updates. Use optimistic only when you control error/rollback semantics.
