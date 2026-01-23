@@ -64,35 +64,30 @@ const docsByTech = technologies.map((technology) => {
                 </CardTitle>
               </CardHeader>
 
-              <CardContent class="p-0 flex flex-col gap-6">
+              <CardContent class="p-0 flex flex-col gap-2">
                 {categories.every((c) => c.docs.length === 0) ? (
                   <p class="body-small">No documentation yet.</p>
                 ) : (
-                  categories.map(({ category, docs }) =>
+                  categories.map(({ docs }) =>
                     docs.length === 0 ? null : (
-                      <div>
-                        <h3 class="heading-small mb-3 capitalize">
-                          {category}
-                        </h3>
-                        <ul class="space-y-2">
-                          {docs.map((doc) => (
-                            <li>
-                              <Button
-                                variant="ghost"
-                                size="md"
-                                href={`/docs/${doc.slug}`}
-                                class="justify-between! w-full group"
-                              >
-                                {doc.data.title}
-                                <ArrowRight
-                                  class="w-5 h-5 text-muted-foreground group-hover:text-accent"
-                                  slot="icon-right"
-                                />
-                              </Button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                      <ul class="space-y-2">
+                        {docs.map((doc) => (
+                          <li>
+                            <Button
+                              variant="ghost"
+                              size="md"
+                              href={`/docs/${doc.slug}`}
+                              class="justify-between! w-full group"
+                            >
+                              {doc.data.title}
+                              <ArrowRight
+                                class="w-5 h-5 text-muted-foreground group-hover:text-accent"
+                                slot="icon-right"
+                              />
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
                     ),
                   )
                 )}

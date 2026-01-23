@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/layout.astro";
+import Section from "@/components/layout/section.astro";
 import TableOfContent from "@/components/ui/table-of-content.astro";
 
 export async function getStaticPaths() {
@@ -21,22 +22,24 @@ const { Content, headings } = await entry.render();
 ---
 
 <Layout title={entry.data.title}>
+  <Section>
   <article class="mx-auto px-6">
     <header class="pb-6 md:pb-12 border-b border-border">
       <h1 class="heading-page mb-4">{entry.data.title}</h1>
       <p class="body-large">{entry.data.description}</p>
     </header>
-    <div class="grid lg:grid-cols-[1fr_280px] gap-8 lg:gap-12 mt-8 lg:mt-12">
-      <div class="prose py-6 md:py-10 max-w-none w-full">
+    <div class="grid lg:grid-cols-[1fr_280px] gap-8 lg:gap-12 mt-6 md:mt-12">
+      <div class="prose max-w-none w-full">
         <Content />
       </div>
       {
         headings.length > 1 && (
-          <aside class="mt-12 hidden lg:block">
+          <aside class="hidden lg:block">
             <TableOfContent headings={headings} />
           </aside>
         )
       }
     </div>
   </article>
+  </Section>
 </Layout>
