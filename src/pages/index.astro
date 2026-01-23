@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
 import placeHolderImage from "@/images/placeholder.svg";
-import { ArrowRight, BookOpen } from "@lucide/astro";
+import { ArrowRight, BookOpen, FileMinus, ArrowRightIcon } from "@lucide/astro";
 import Layout from "@/layouts/layout.astro";
 import Section from "@/components/layout/section.astro";
 import Hero from "@/components/ui/hero.astro";
@@ -15,6 +15,8 @@ import {
   CardFooter,
   CardAction,
 } from "@/components/ui/card";
+import Badge from "@/components/ui/badge.astro";
+import Button from "@/components/ui/button.astro";
 
 const toTimestamp = (date?: Date | string | number) =>
   date ? new Date(date).getTime() : 0;
@@ -88,7 +90,25 @@ const docCollection: CollectionEntry<"docs">[] = (await getCollection("docs"))
 
   <Section class="md:grid md:grid-cols-3 gap-6 md:gap-8">
     <div>
+      <Badge variant="secondary" size="md">
+        <FileMinus slot="icon-left" />
+        Documentation
+      </Badge>
       <h2 class="heading-section my-6 md:my-8">Latest Documentation</h2>
+      <p>
+        Stay up-to-date with our latest documentation updates. Explore new
+        features, improvements, and best practices to make the most out of our
+        tools and services.
+      </p>
+      <Button
+        variant="ghost"
+        size="md"
+        class="mt-6 md:mt-8"
+        href="/docs"
+      >
+        View All Documentation
+        <ArrowRightIcon slot="icon-right" />
+      </Button>
     </div>
     <div class="grid md:col-span-2 gap-4 md:gap-6">
       {
