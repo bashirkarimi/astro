@@ -22,7 +22,7 @@ export const collections = {
       category: z.string(),
       order: z.number().default(0),
       draft: z.boolean().default(false),
-      lastUpdated: z.coerce.date().optional(), // Changed from z.date() to z.coerce.date()
+      lastUpdated: z.date().optional(),
       authors: z.array(z.string()).optional(),
       tags: z.array(z.string()).optional(),
       relatedDocs: z.array(z.string()).optional(),

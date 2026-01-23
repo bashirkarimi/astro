@@ -1,13 +1,135 @@
 ---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import placeHolderImage from "@/images/placeholder.svg";
+import { ArrowRight, BookOpen, FileMinus, ArrowRightIcon } from "@lucide/astro";
 import Layout from "@/layouts/layout.astro";
+import Section from "@/components/layout/section.astro";
 import Hero from "@/components/ui/hero.astro";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+  CardAction,
+} from "@/components/ui/card";
+import Badge from "@/components/ui/badge.astro";
+import Button from "@/components/ui/button.astro";
+
+const toTimestamp = (date?: Date | string | number) =>
+  date ? new Date(date).getTime() : 0;
+
+const blogCollection: CollectionEntry<"blogs">[] = (
+  await getCollection("blogs")
+)
+  .filter((post) => !post.data.draft)
+  .sort(
+    (a, b) =>
+      new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime(),
+  )
+  .slice(0, 3);
+
+const docCollection: CollectionEntry<"docs">[] = (await getCollection("docs"))
+  .filter((doc) => !doc.data.draft)
+  .sort(
+    (a, b) => toTimestamp(b.data.lastUpdated) - toTimestamp(a.data.lastUpdated),
+  )
+  .slice(0, 4);
 ---
 
 <Layout title="Home Page">
   <Hero
-    title="Build better learn faster"
+    title="Learn faster Build better"
     description="All the resources you need for Frontend."
     features={["React", "Next.js", "Astro"]}
   />
 
+  <Section>
+    <h2 class="heading-section mb-6 md:mb-8">Latest Blogs</h2>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <p>
+        Explore our latest articles, tutorials, and insights on web development,
+        design, and more. Stay updated with the newest trends and best practices
+        in the industry.
+      </p>
+
+      {
+        blogCollection.map((blog) => (
+          <a href={`/blogs/${blog.slug}`} class="group">
+            <Card class="h-full">
+              <CardHeader class="flex flex-col-reverse gap-4">
+                <CardTitle class="px-4">{blog.data.title}</CardTitle>
+                <div class="relative overflow-hidden">
+                  <Image
+                    src={blog.data.image ?? placeHolderImage}
+                    alt={blog.data.title}
+                    densities={[1.5, 2]}
+                    class="object-cover w-full h-full aspect-4/3 md:aspect-video group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+              </CardHeader>
+              <CardContent class="px-4">
+                <p>{blog.data.description}</p>
+              </CardContent>
+              <CardFooter class="px-4 pb-4 mt-auto">
+                <CardAction class="ml-auto">
+                  <ArrowRight class="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" />
+                </CardAction>
+              </CardFooter>
+            </Card>
+          </a>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section class="md:grid md:grid-cols-3 gap-8 lg:gap-16">
+    <div>
+      <Badge variant="secondary" size="md">
+        <FileMinus slot="icon-left" />
+        Documentation
+      </Badge>
+      <h2 class="heading-section my-6 md:my-8">Latest Documentation</h2>
+      <p>
+        Stay up-to-date with our latest documentation updates. Explore new
+        features, improvements, and best practices to make the most out of our
+        tools and services.
+      </p>
+      <Button variant="ghost" size="md" class="mt-6 md:mt-8" href="/docs">
+        View All Documentation
+        <ArrowRightIcon slot="icon-right" />
+      </Button>
+    </div>
+    <div class="grid md:col-span-2 gap-4 md:gap-6">
+      {
+        docCollection.map((doc) => (
+          <a
+            href={`/docs/${doc.slug}`}
+            class="group flex gap-4 md:gap-6 border-b hover:border-accent/50 transition-colors pb-4 md:pb-6"
+          >
+            <div class="w-10 h-10 rounded-lg bg-muted border border-border group-hover:border-accent/20 flex items-center justify-center">
+              <BookOpen class="w-5 h-5 text-muted-foreground group-hover:text-accent" />
+            </div>
+            <Card class="h-full w-full border-0 shadow-none! rounded-none! transition-colors">
+              <CardHeader class="px-4">
+                <div class="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
+                  {doc.data.technology}
+                </div>
+                <CardTitle>{doc.data.title}</CardTitle>
+              </CardHeader>
+              <CardContent class="px-4">
+                <p class="text-sm text-muted-foreground leading-relaxed text-pretty">
+                  {doc.data.description}
+                </p>
+              </CardContent>
+            </Card>
+            <ArrowRight class="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors self-end" />
+          </a>
+        ))
+      }
+    </div>
+  </Section>
 </Layout>

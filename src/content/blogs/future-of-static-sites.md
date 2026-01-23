@@ -5,6 +5,7 @@ pubDate: 2025-02-01
 author: "Taylor Brooks"
 tags: ["ssg", "web", "performance", "astro"]
 slug: "the-future-of-static-sites"
+image: "../../images/modern-web-dev-workspace.png"
 ---
 
 This post is still a draft.

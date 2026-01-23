@@ -6,6 +6,7 @@ author: "Alex Morgan"
 tags: ["astro", "performance"]
 draft: false
 slug: "performance-and-delivery"
+image: "../../images/performance-optimization-metrics.jpg"
 ---
 
 

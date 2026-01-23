@@ -6,10 +6,15 @@ import Layout from "@/layouts/layout.astro";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import Hero from "@/components/ui/hero.astro";
 import Button from "@/components/ui/button.astro";
+import Section from "@/components/layout/section.astro";
 
 const allDocs: CollectionEntry<"docs">[] = await getCollection("docs");
-const technologies = Array.from(new Set(allDocs.map((doc) => doc.data.technology)));
-const categoryOrder = Array.from(new Set(allDocs.map((doc) => doc.data.category)));
+const technologies = Array.from(
+  new Set(allDocs.map((doc) => doc.data.technology)),
+);
+const categoryOrder = Array.from(
+  new Set(allDocs.map((doc) => doc.data.category)),
+);
 
 function sortDocs(a: CollectionEntry<"docs">, b: CollectionEntry<"docs">) {
   return (
@@ -44,51 +49,58 @@ const docsByTech = technologies.map((technology) => {
     features={["50+ Guides", "100+ Code Examples", "Always Up-to-date"]}
   />
 
-  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-    {
-      docsByTech.map(({ technology, categories }) => (
-        <Card as="section" aria-labelledby={`${technology}-heading`}>
-          <div class="p-6 flex flex-col gap-6">
-            <CardHeader class="flex gap-4 items-center">
-              <div class="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
-                <BookOpen class="w-5 h-5 text-accent" />
-              </div>
-              <CardTitle>
-                <h2 class="heading-card capitalize">{technology}</h2>
-              </CardTitle>
-            </CardHeader>
+  <Section>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {
+        docsByTech.map(({ technology, categories }) => (
+          <Card as="section" aria-labelledby={`${technology}-heading`}>
+            <div class="p-6 flex flex-col gap-6">
+              <CardHeader class="flex gap-4 items-center">
+                <div class="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+                  <BookOpen class="w-5 h-5 text-accent" />
+                </div>
+                <CardTitle>
+                  <h2 class="heading-card capitalize">{technology}</h2>
+                </CardTitle>
+              </CardHeader>
 
-            <CardContent class="p-0 flex flex-col gap-6">
-              {categories.every((c) => c.docs.length === 0) ? (
-                <p class="body-small">No documentation yet.</p>
-              ) : (
-                categories.map(({ category, docs }) =>
-                  docs.length === 0 ? null : (
-                    <div>
-                      <h3 class="heading-small mb-3 capitalize">{category}</h3>
-                      <ul class="space-y-2">
-                        {docs.map((doc) => (
-                          <li>
-                            <Button
-                              variant="ghost"
-                              size="md"
-                              href={`/docs/${doc.slug}`}
-                              class="justify-between! w-full group"
-                            >
-                              {doc.data.title}
-                              <ArrowRight class="w-5 h-5 text-muted-foreground group-hover:text-accent" slot="icon-right" />
-                            </Button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ),
-                )
-              )}
-            </CardContent>
-          </div>
-        </Card>
-      ))
-    }
-  </div>
+              <CardContent class="p-0 flex flex-col gap-6">
+                {categories.every((c) => c.docs.length === 0) ? (
+                  <p class="body-small">No documentation yet.</p>
+                ) : (
+                  categories.map(({ category, docs }) =>
+                    docs.length === 0 ? null : (
+                      <div>
+                        <h3 class="heading-small mb-3 capitalize">
+                          {category}
+                        </h3>
+                        <ul class="space-y-2">
+                          {docs.map((doc) => (
+                            <li>
+                              <Button
+                                variant="ghost"
+                                size="md"
+                                href={`/docs/${doc.slug}`}
+                                class="justify-between! w-full group"
+                              >
+                                {doc.data.title}
+                                <ArrowRight
+                                  class="w-5 h-5 text-muted-foreground group-hover:text-accent"
+                                  slot="icon-right"
+                                />
+                              </Button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ),
+                  )
+                )}
+              </CardContent>
+            </div>
+          </Card>
+        ))
+      }
+    </div>
+  </Section>
 </Layout>

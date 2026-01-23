@@ -6,6 +6,7 @@ author: "Jamie Lee"
 tags: ["markdown", "cms", "architecture"]
 draft: false
 slug: "markdown-vs-headless-cms"
+image: "../../images/ui-ux-design-interface.png"
 ---
 
 ## The core question

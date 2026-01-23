@@ -6,6 +6,7 @@ author: "Alex Morgan"
 tags: ["astro", "pattern", "web"]
 draft: false
 slug: "real-world-production-patterns"
+image: "../../images/scalable-architecture.png"
 ---
 
 
