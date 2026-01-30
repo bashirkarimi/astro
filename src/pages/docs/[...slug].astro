@@ -4,8 +4,9 @@ import { getCollection } from "astro:content";
 import Layout from "@/layouts/layout.astro";
 import Section from "@/components/layout/section.astro";
 import TableOfContent from "@/components/ui/table-of-content.astro";
-import { ChevronRight } from "@lucide/astro";
+import { ChevronRight, ArrowRight } from "@lucide/astro";
 import Badge from "@/components/ui/badge.astro";
+import Button from "@/components/ui/button.astro";
 
 export async function getStaticPaths() {
   const entries: CollectionEntry<"docs">[] = await getCollection(
@@ -21,36 +22,70 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props as { entry: CollectionEntry<"docs"> };
 const { Content, headings } = await entry.render();
+const technology = entry.data.technology;
+const allDocs: CollectionEntry<"docs">[] = await getCollection("docs");
+const categories = allDocs.filter((doc) => doc.data.technology === technology);
 ---
 
 <Layout title={entry.data.title}>
-  <nav class="flex items-center gap-2 text-sm text-muted-foreground mt-6">
-    <a href="/docs" class="hover:text-foreground transition-colors">Documentation</a>
+  <nav
+    class="flex items-center gap-2 text-sm text-muted-foreground mt-6"
+    aria-label="Breadcrumb"
+  >
+    <a href="/docs" class="hover:text-foreground transition-colors"
+      >Documentation</a
+    >
     <ChevronRight class="w-3.5 h-3.5" />
-    <span class="text-foreground">{entry.data.technology}</span>
+    <span class="text-foreground">{technology}</span>
   </nav>
-  <Section>
-    <article class="mx-auto px-6">
-      <header class="pb-6 md:pb-12 border-b border-border flex flex-col">
-        <h1 class="heading-page mb-4 order-1">{entry.data.title}</h1>
-        <Badge class="mb-2 order-0" variant="secondary" size="sm">
-          <span class="sr-only">Category: </span>
-          {entry.data.technology}
-        </Badge>
-        <p class="body-large order-2">{entry.data.description}</p>
-      </header>
-      <div class="grid lg:grid-cols-[1fr_280px] gap-8 lg:gap-12 mt-6 md:mt-12">
-        <div class="prose max-w-none w-full">
-          <Content />
+  <div class="flex flex-col lg:flex-row lg:grow gap-8 lg:gap-12 mt-4 lg:mt-8">
+    <Section class="lg:order-last">
+      <article class="mx-auto">
+        <header class="pb-6 md:pb-12 border-b border-border flex flex-col">
+          <h1 class="heading-page mb-4 order-1">{entry.data.title}</h1>
+          <Badge class="mb-2 order-0" variant="secondary" size="sm">
+            <span class="sr-only">Category: </span>
+            {technology}
+          </Badge>
+          <p class="body-large order-2">{entry.data.description}</p>
+        </header>
+        <div
+          class="grid xl:grid-cols-[1fr_280px] gap-8 lg:gap-12 mt-6 md:mt-12"
+        >
+          {
+            headings.length > 1 && (
+              <nav
+                class="hidden xl:block order-last"
+                aria-label="Table of Contents"
+              >
+                <TableOfContent headings={headings} />
+              </nav>
+            )
+          }
+          <div class="prose max-w-none w-full">
+            <Content />
+          </div>
         </div>
+      </article>
+    </Section>
+
+    <nav class="lg:max-w-64 pt-12 lg:pt-24" aria-label="Category Navigation">
+      <ul class="space-y-2 list-none">
         {
-          headings.length > 1 && (
-            <aside class="hidden lg:block">
-              <TableOfContent headings={headings} />
-            </aside>
-          )
+          categories.map((category) => (
+            <li>
+              <Button
+                variant="ghost"
+                size="md"
+                href={`/docs/${category.slug}`}
+                class="justify-between! group"
+              >
+                {category.data.title}
+              </Button>
+            </li>
+          ))
         }
-      </div>
-    </article>
-  </Section>
+      </ul>
+    </nav>
+  </div>
 </Layout>
