@@ -1,0 +1,49 @@
+---
+title: "Value to a Project"
+description: "Benefits and advantages of using vanilla JavaScript in projects."
+technology: "javascript"
+category: "core features"
+order: 11
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["javascript", "value"]
+---
+
+
+Using vanilla JavaScript (as opposed to a heavy framework) can bring several concrete benefits to a project:
+
+## Lightweight and Performance-First
+
+By avoiding the overhead of a framework, you often end up with a smaller JS bundle. This leads to:
+
+- **Faster Load Times:** A smaller payload means users (especially on mobile or slow connections) download the app faster. There’s less parsing and execution time too. A vanilla JS app that might be, say, 50 KB of your own code could be significantly smaller than a React/Vue app that includes the framework runtime (which alone might be ~100 KB minified, plus your code).
+- **Less runtime overhead:** Frameworks often introduce an abstraction layer (virtual DOM diffing, change detection, etc.). Vanilla JS calls the DOM API directly; there’s no intermediate representation or library doing work on your behalf (and consuming CPU). This can mean snappier response, as long as your own code is efficient. For example, toggling a class on click with vanilla JS is basically just adding/removing from `classList` – frameworks might wrap that in extra checks or re-renders.
+- **Memory usage:** A smaller codebase and lack of framework means potentially less memory used. Frameworks allocate structures for their component trees or instructions. On memory-constrained devices (some IoT or older phones), this could matter.
+
+Overall, a well-written vanilla JS application can be very performant, as you can tailor every update to do exactly what’s needed and nothing more.
+
+## Fewer Dependencies, Less Complexity
+
+Managing dependencies has its costs: updates can break things, security vulnerabilities can be introduced via packages, build configurations can get complex. With vanilla JS:
+
+- **No build step required (in simplest cases):** You can often just write JS and include it via `<script>` (especially if you stick to widely supported features or use polyfills manually). This simplicity can be refreshing – just open the HTML file and it works. In contrast, many framework apps require a whole toolchain setup (Node, bundler, transpiler, dev server, etc.). That said, in practice, you might still use a bundler or Babel even with “vanilla” JS to use new syntax, but you have the option not to.
+- **Less dependency maintenance:** You’re not pulling in as many NPM packages, so there are fewer things to update or that can break. You don’t have to chase the latest framework version or deal with major migrations. Your code is *your* code. If something’s wrong, you debug your own logic rather than diving into a library’s source or issues.
+- **Lower long-term risk:** If a framework is abandoned or drastically changes, you’d face a big refactor to keep up. Vanilla JS doesn’t “go out of support”. The web standards evolve slowly and usually with backward compatibility. Code written with plain JS and DOM will likely still work in browsers 5, 10 years from now (just like a jQuery 1.7 site from 2012 might still work fine today). Meanwhile, a 2012-era AngularJS app required a full rewrite to move to modern Angular or another framework, because that framework had a lifecycle. Vanilla JS is tied to the web platform which is stable and versionless (evergreen).
+- **Understanding and control:** Without a black-box framework, the team is forced to understand how things work. This can lead to better learning and perhaps more thoughtful code. If something goes wrong, you don’t have to wonder if it’s a framework bug or misuse – it’s just your code and browser APIs.
+
+## Native Browser Features Are Powerful Now
+
+Modern browsers have effectively integrated many capabilities that used to require libraries:
+
+- For example, in the past you might use jQuery for DOM manipulation and AJAX. Now, DOM methods are easier and `fetch` provides a nice API for requests (no need for $.ajax).
+- The browser gives us **Web Components** for reusable components, as discussed. You don’t need React or Angular if Web Components fulfill your needs for encapsulation and reuse.
+- Native **modules** allow you to structure code without bundlers or frameworks.
+- Features like **async/await** make asynchronous code almost as straightforward as synchronous, reducing the need for external helper libraries.
+- The **Intersection Observer API** allows efficient observation of element visibility (useful for infinite scroll or lazy loading images) – previously you might have used scroll event handlers and throttling, now the browser can handle a lot of it for you.
+- **CSS has improved**: many animations and even layout (flexbox, grid) are handled in CSS, reducing the need for JS in certain aspects of UI.
+- **Service Workers & offline caching** give the kind of control that previously only a framework (or manual hacks) could give for offline support.
+- If you need state management, you can often get by with something like the browser’s `CustomEvent` or `EventTarget` as an event bus, or use simple patterns like modules with closures. It’s not as fancy as a Redux store, but depending on the app, it might be enough.
+
+In essence, the web platform has narrowed the gap between what frameworks provide and what can be done with pure Web APIs.
+
+To illustrate value to a project, consider an example: a simple product marketing site with a few interactive components (say a slider, and a form that submits via AJAX). Using vanilla JS (perhaps with a touch of DOM scripting and maybe one small helper library for the slider if needed) will result in maybe a few dozen KB of custom code. The site will load fast, and there’s little complexity. If the same site was built by a team used to React, they might scaffold a whole React app, pull in a bunch of packages, and end up shipping a 300 KB bundle for what amounts to a form and slider. It’s not that React can’t do it, but it’s using a bulldozer to move a flower pot in that scenario. The vanilla approach clearly provides value in being lean and straightforward.

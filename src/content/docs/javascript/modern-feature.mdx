@@ -1,0 +1,168 @@
+---
+title: "Modern JavaScript Features"
+description: "An overview of JavaScript features introduced in ES6 and beyond."
+technology: "javascript"
+category: "core features"
+order: 4
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["javascript", "features", "ES6"]
+---
+
+
+The JavaScript language has evolved significantly through the ECMAScript standard since 2015. Each year brings new features that make the language more powerful, expressive, and convenient. Some major modern features include:
+
+## **Classes and Inheritance (ES2015+)**
+
+The `class` syntax provides a cleaner way to create constructor functions and manage inheritance. For example:
+
+```jsx
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+  greet() {
+    console.log(`Hello, I'm ${this.name}`);
+  }
+}
+class Student extends Person {
+  constructor(name, school) {
+    super(name);
+    this.school = school;
+  }
+  greet() {
+    super.greet();
+    console.log(`I study at ${this.school}`);
+  }
+}
+```
+
+Under the hood, this is still using prototypes (so `Student.prototype.__proto__ === Person.prototype`), but as developers we can think in terms of classes. In recent additions, JavaScript supports **private class fields** using `#` (so you can have truly private properties not accessible outside the class) and public class fields for declaring properties without putting them in the constructor. The class syntax also supports static methods, getters/setters, etc. It’s important to note that JavaScript’s inheritance is still prototype-based, but class syntax makes it look more like typical class-based languages, which can be more intuitive for many.
+
+## **Arrow Functions**
+
+Arrow functions (`()=>{}`) are a shorthand for writing function expressions. They also lexically bind `this`. So, `let add = (a, b) => a + b;` defines a function that returns a + b. Arrow functions are great for callbacks or functional programming patterns because they keep the code concise. For example, instead of writing `array.filter(function(x) { return x > 10; })`, you can write `array.filter(x => x > 10)`. Beyond brevity, the lexical `this` binding means if you use `this` inside an arrow, it’s referring to `this` in the surrounding scope (which avoids common bugs when using callbacks in classes, where `this` might otherwise change).
+
+## **Template Literals**
+
+Backtick strings `` allow multi‑line strings and interpolation:
+
+```jsx
+const name ='Bob';
+console.log(`Hello, ${name}!`);
+```
+
+Tagged templates let you process template strings with custom functions.
+
+## Destructuring, Spread and Rest
+
+Destructuring extracts values from arrays or objects:
+
+```jsx
+const [x, y] = [10,20];
+const { name, age } = {name:'Eve',age:30 };
+```
+
+The **spread operator** (`...`) expands arrays or objects:
+
+```jsx
+const arr = [1,2,3];
+const arr2 = [...arr,4];// [1,2,3,4]
+const obj2 = { ...obj,b:5 };
+```
+
+**Rest parameters** capture remaining arguments:
+
+```jsx
+functionsum(...nums) {
+return nums.reduce((a, b) => a + b,0);
+}
+```
+
+## **Modules**
+
+Modules allow code organisation and reuse. In browsers, use `<script type="module">`. In Node or Deno, use `import`/`export`. Example:
+
+```jsx
+// math.js
+export function add(a, b) {return a + b; }
+// main.js
+import { add } from './math.js';
+console.log(add(2,3));
+```
+
+ES2020 introduced **dynamic import** (`import()` returns a promise) and **import.meta** for module metadata. **Top‑level await** (ES2022) allows awaiting promises at the top level of modules.
+
+## **Optional Chaining and Nullish Coalescing**
+
+Optional chaining (`?.`) safely accesses nested properties:
+
+```jsx
+const street = user?.address?.street;
+```
+
+Nullish coalescing (`??`) provides defaults only when the left operand is `null` or `undefined`:
+
+```jsx
+const count = userInput ??0;
+```
+
+## **Promises and async/await**
+
+Although Promises came in ES2015, and async/await in ES2017, it’s worth highlighting them as modern essentials. Prior to promises, callback-based async code could get unwieldy. Promises provided a structured way to handle asynchronous results and errors. Async/await built on promises to allow writing asynchronous code that looks synchronous, greatly simplifying control flow and error handling (with `try/catch`) for async operations. Over the past few years, the ecosystem has embraced these patterns (for example, many DOM APIs and Node APIs have promise-based versions now, like `fs.promises` in Node for file I/O).
+
+Newer additions include:
+
+- **Promise.allSettled( iterable )** (ES2020): similar to Promise.all, but waits for all promises to settle (either fulfill or reject) and returns an array of outcome objects. Useful when you want to proceed after a bunch of tasks regardless of individual failures.
+- **Promise.any( iterable )** (ES2021): waits until any one of the promises fulfills (or all reject). It returns the first fulfilled value, or errors if all promises reject. This can be useful for racing multiple sources (e.g., try multiple endpoints and take the fastest successful one).
+- **Promise.withResolvers()** (2024): this static method returns an object containing a new [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object and two functions to resolve or reject it, corresponding to the two parameters passed to the executor of the [`Promise()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise) constructor. [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers#:~:text=Promise)
+- **Promise.try()** (2025): The **`Promise.try()`** static method takes a callback of any kind (returns or throws, synchronously or asynchronously) and wraps its result in a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/try#:~:text=Promise)
+
+## Iteration Enhancements
+
+`Iterator.prototype.map()`, `filter()`, `take()`, `drop()`, etc., provide lazy transformations on iterables.
+
+- `Iterator.prototype.take()` lets you *take only the first N items from an iterator* and then stop. It’s useful when dealing with long (or even infinite) sequences where you only need a subset. [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/take)
+- `drop(limit)` is a new JavaScript iterator helper method that returns a **new iterator** which **skips the first `limit` values** from the original iterator. [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/drop)
+
+## **New Data Types and Structures**
+
+- **BigInt (ES2020)** stores integers beyond ±2^53. E.g., `123456789012345678901n`.
+- **Symbol (ES2015)** creates unique identifiers: `const id = Symbol('id')`. Useful for private keys and meta‑programming (e.g., `Symbol.iterator`).
+- **Map and Set (ES2015)** – `Map` holds key–value pairs with any type as keys; `Set` stores unique values. **WeakMap** and **WeakSet** hold weak references to keys, enabling garbage collection.
+- **Typed Arrays (ES2011+)** – `ArrayBuffer` and typed array views (`Uint8Array`, etc.) handle binary data for WebGL, file processing and WebAssembly.
+
+## **Useful built-in methods**
+
+Modern JavaScript adds many methods to core objects:
+
+- **Strings:** `includes()`, `startsWith()`, `endsWith()`, `repeat()`, `padStart()`, `padEnd()`, `trimStart()`, `trimEnd()`, `replaceAll()` (ES2021).
+- **Arrays:** `includes()`, `find()`, `findIndex()`, `flat()`, `flatMap()`, `every()`, `some()`, `reduce()`, `toSorted()`, `toReversed()`, `toSpliced()`, `with()` (ES2023), `findLast()` and `findLastIndex()` (ES2023).
+- **Objects:** `Object.entries()`, `Object.values()`, `Object.fromEntries()`, `Object.hasOwn()` (ES2022).
+- **Numbers:** `Number.isNaN()`, `Number.isFinite()`.
+- **Miscellaneous:** `globalThis` provides a universal reference to the global object across environments; `at()` retrieves array or string elements by positive or negative index.
+
+## **Modules and Tooling Improvements**
+
+The adoption of ES modules has been accompanied by a revolution in build tools. While bundlers like Webpack remain widely used, newer tools provide faster development:
+
+- **Rollup** – Efficient bundling for libraries with tree‑shaking.
+- **Parcel** – Zero‑configuration bundler with automatic asset detection.
+- **esbuild** – Go‑based bundler/transpiler that is orders of magnitude faster than older tools.
+- **SWC** – Rust‑based compiler used in Next.js; compiles TypeScript and JSX extremely quickly.
+- **Vite** – Uses esbuild for development and Rollup for production; provides instant server start and hot module replacement.
+- **Turbopack** (alpha 2023) – Rust‑based, promises to be faster than Webpack.
+
+## **Recent and upcoming features**
+
+ECMAScript evolves annually. Recent and proposed features include:
+
+- **Array and object methods** (ES2023): `toSorted()`, `toReversed()`, `toSpliced()`, `with()`, `findLast()`, `findLastIndex()`, `Object.groupBy()` and `Object.toSorted()` .
+- **Set methods** (ES2024): `union`, `intersection`, `difference`, `symmetricDifference`, `isSubsetOf`, `isSupersetOf`, [sonarsource.com](https://www.sonarsource.com/blog/union-intersection-difference-javascript-sets/#:~:text=What%20are%20the%20new%20Set,functions).
+- **Iterator helpers** (ES2025): `map()`, `filter()`, `take()`, `drop()`, etc., on all iterators, [developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/map#:~:text=Iterator).
+- **RegExp improvements:** Named capture groups, `s` (dotAll) flag, lookbehind assertions, Unicode property escapes, `matchIndices` (`d` flag) widely available, [developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/hasIndices#:~:text=RegExp). Future proposals include the `/v` flag for advanced set notation and `RegExp.escape()` to safely escape user input.
+- **Intl API** expansions: `Intl.RelativeTimeFormat`. [developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat#:~:text=Intl)), `Intl.ListFormat` (since 2021[developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat#:~:text=Intl)) and improvements to date/time formatting. Proposals include `Intl.DurationFormat` and `Intl.DisplayNames` enhancements.
+- **WeakRefs and FinalizationRegistry:** Widely available since 2021, [developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef#:~:text=Baseline%20%20Widely%20available%20,)[developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry#:~:text=Baseline%20%20Widely%20available%20,) but should be used sparingly.
+
+The bottom line is that **modern JavaScript** is far more developer-friendly than it was in the ES5 days. We have syntactic sugar for common patterns (classes, async/await), new types and data structures to cover more use cases (BigInt, Map, etc.), and a host of small improvements that add up to more concise and robust code. It’s important for developers to stay updated because features like optional chaining or destructuring can drastically simplify code (and once you’re used to them, you wouldn’t want to go back). The yearly cadence of ECMAScript means we get incremental improvements regularly, often informed by real-world needs and prior art in other languages.
+****

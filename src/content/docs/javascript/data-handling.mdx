@@ -1,0 +1,107 @@
+---
+title: "Data Handling and JSON"
+description: "An overview of JavaScript data handling and JSON operations."
+technology: "javascript"
+category: "core features"
+order: 6
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["javascript", "data-handling", "JSON"]
+---
+
+
+Being a web-centric language, JavaScript has always had strengths in handling data formats commonly used on the web:
+
+## JSON Operations
+
+JSON (JavaScript Object Notation) is the lingua franca of web data interchange, and it’s no coincidence that its syntax is derived from JavaScript object literal syntax. JavaScript can easily convert data to and from JSON:
+
+- `JSON.stringify(obj)` – takes a JavaScript object/array and serializes it into a JSON string. This is used, for example, to send data to a server or save structured data in localStorage.
+- `JSON.parse(jsonString)` – parses a JSON string back into a JavaScript object/array. You might use this to handle an AJAX response or to load stored data.
+    
+    Because JSON is so ubiquitous (most REST APIs use JSON, config files, etc.), these methods are highly optimized in JS engines. JSON is lightweight and human-readable, while being machine-parseable, making it ideal for network communication. JavaScript’s ease of using JSON (no additional libraries needed, since it’s built-in) helped it become the dominant data format in web services (supplanting XML in many cases).
+    
+
+In addition to these, JavaScript can naturally handle other data formats if needed (e.g., XML parsing via DOMParser, or using third-party libraries for YAML, CSV, etc.), but JSON + JS is a particularly powerful combo since the data can be consumed directly as native objects.
+
+## Regular Expressions
+
+Regular expressions are patterns used to match character sequences. JavaScript supports regex literals (`/pattern/flags`) and the `RegExp` constructor. Common uses:
+
+- **Validation:** Checking email or phone number formats.
+- **Searching:** Finding substrings with `.match()`, `.search()` or `.exec()`.
+- **Replacement:** `.replace()` or `.replaceAll()` substituting matched text.
+
+Modern features like named capture groups (`(?<name>...)`), lookbehind (`(?<=...)`, `(?<!...)`), dotAll (`/s`), Unicode property escapes (`\p{Letter}`) and match indices (`/d`) make regexes more powerful and readable. Use them judiciously to avoid unreadable code.
+
+## Array Methods
+
+Arrays are fundamental in JS, and there is a rich set of prototype methods that allow treating arrays in a functional style:
+
+- **Transformation:**
+    - `map(fn)`: creates a new array by applying `fn` to each element of the original. E.g., `[1,2,3].map(x => x * 2)` produces `[2,4,6]`.
+    - `filter(fn)`: creates a new array with only those elements for which `fn` returns true. E.g., `[1,2,3,4].filter(x => x % 2 === 0)` gives `[2,4]`.
+    - `reduce(fn, initial)`: reduces the array to a single value by accumulating results of `fn`. E.g., `[1,2,3].reduce((sum, x) => sum + x, 0)` results in `6`. `reduce` is very powerful (you can use it to sum, to flatten arrays, to build objects, etc. by tweaking the reducer function).
+    - `flatMap(fn)`: a combination of map and flat (flattens one level the result). Useful when your mapping results in arrays that you want to concatenate.
+    - `flat()` : creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
+- **Iteration:**
+    - `forEach(fn)`: simply executes `fn` for each element (no return value). Often used for side effects like logging or modifying external state.
+    - `some(fn)`: returns true if at least one element satisfies the predicate `fn` (i.e., there exists an element for which fn returns true).
+    - `every(fn)`: returns true only if all elements satisfy the predicate (i.e., for all elements fn returns true).
+- **Search:**
+    - `find(fn)`: returns the first element that satisfies predicate `fn` (or undefined if none).
+    - `findIndex(fn)`: similar but returns the index of that element.
+    - `indexOf(val)`: returns the first index of the given value (uses `===` for comparison), or -1 if not found.
+    - `includes(val)`: returns true if the array contains the value (again uses `===`; for NaN it works whereas indexOf wouldn’t find NaN because NaN !== NaN).
+- **Adding/removing elements:**
+    - `push(val)` and `pop()`: add to end, remove from end (stack behavior).
+    - `unshift(val)` and `shift()`: add to front, remove from front (queue behavior).
+    - `splice(start, deleteCount, ...items)`: very versatile – can delete or insert at arbitrary positions. E.g., `arr.splice(2, 1)` removes one element at index 2, or `arr.splice(1, 0, 'a')` inserts 'a' at index 1.
+    - Note: these methods (`push`, `pop`, etc.) mutate the array. Newer methods like the `toSpliced` we mentioned do similar things without mutating.
+- **Ordering:**
+    - `sort(compareFn)`: sorts the array in place. By default, it sorts elements as strings, which can be tricky (e.g., `[1, 2, 10].sort()` yields `[1, 10, 2]` as strings). So usually you provide a compare function: e.g., `arr.sort((a,b) => a - b)` for numeric ascending sort.
+    - `reverse()`: reverses the array in place.
+    - ES2023’s `toSorted` and `toReversed` provide non-mutating versions.
+- **Slicing and concatenation:**
+    - `slice(start, end)`: returns a new array that’s a shallow copy of a portion of the original (does not include `end` index). It’s often used to copy arrays (e.g., `arr.slice()` returns a shallow copy of arr).
+    - `concat(...arrays)`: returns a new array by concatenating the original and the provided arrays/values.
+- **Others:**
+    - `join(separator)`: join all elements into a string with the given separator (useful for CSV or just to print arrays).
+    - `fill(value, start, end)`: fill a range of indices with a fixed value.
+    - `Array.from(iterable)` and `Array.of(...elements)`: static methods to create arrays from an iterable or from a set of arguments respectively.
+
+Using these methods leads to a declarative style of programming where you describe *what* you want to do with the array (filter these, map those) rather than how to loop and collect results. This often makes code more concise and readable. It’s very much embraced in modern JS – you’ll frequently see chains like: `data.filter(...).map(...).reduce(...)` to process arrays in steps.
+
+## String Methods
+
+JavaScript strings are immutable and come with many methods for inspection and manipulation:
+
+- **Extraction/Substrings:**
+    - `slice(start, end)`: extract part of the string from index `start` up to (but not including) `end`. You can also use negative indices to count from the end.
+    - `substring(start, end)`: similar to slice, but doesn’t support negative indices (and swaps start/end if needed). It’s an older method.
+    - `substr(start, length)`: extract given number of characters from start (considered legacy, not in recent specs but still present in browsers).
+- **Searching:**
+    - `indexOf(substring)`: returns the first index where the substring is found, or -1 if not found.
+    - `lastIndexOf(substring)`: like indexOf but from the end.
+    - `includes(substring)`: returns true if the substring is found (ES2015).
+    - `startsWith(prefix)`, `endsWith(suffix)`: self-explanatory checks (ES2015).
+    - For more complex searches, one would use regex (`search()` method can find index via regex, or matchAll for all occurrences).
+- **Case and trimming:**
+    - `toLowerCase()`, `toUpperCase()`: returns a new string with case changed.
+    - `trim()`: removes whitespace from both ends of the string (ES2019 added `trimStart` and `trimEnd` for one side only).
+- **Replacing:**
+    - `replace(searchValue, replacement)`: finds the first occurrence of `searchValue` (which can be a substring or regex) and replaces it with `replacement`. If `searchValue` is a regex with global flag, it replaces all occurrences. However, a simpler ES2021 method is `replaceAll(substring, replacement)` which replaces all occurrences of a substring (or one can use regex with `g`).
+    - Replacement can be a string or a function (to compute the replacement based on match).
+- **Splitting and joining:**
+    - `split(separator)`: splits the string into an array by the separator (could be a simple string or regex).
+    - This pairs with `join` on arrays to go back to a string.
+- **Other:**
+    - `repeat()`, `padStart()`, `padEnd()`, `charAt(index)`, `at(index)` for negative indexing.
+
+Strings in JS also can be treated like arrays of characters (you can do `"hello"[1]` to get `"e"`, for example), but they are immutable, so all modifications produce new strings.
+
+With the above rich set of methods, many text processing tasks can be done directly. For example, to capitalize the first letter of a string: `str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()`. Or to check if a word exists in a sentence case-insensitively: `sentence.toLowerCase().includes(word.toLowerCase())`.
+
+## Error Handling
+
+Use `try…catch…finally` to handle exceptions. In asynchronous functions, use `try…catch` around `await` expressions. Node exposes `process.on('uncaughtException')` and `process.on('unhandledRejection')` to handle global errors, but you should catch errors locally whenever possible. In browsers, `window.onerror` and `window.addEventListener('unhandledrejection', ...)` capture uncaught errors and promise rejections for logging.

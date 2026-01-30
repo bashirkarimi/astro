@@ -1,0 +1,87 @@
+---
+title: "Core Language Features"
+description: "The fundamental features that define JavaScript as a programming language."
+technology: "javascript"
+category: "core features"
+order: 1
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["javascript", "features"]
+---
+
+
+## Dynamic Typing
+
+JavaScript is **dynamically typed**, meaning variables do not have fixed types. A variable can hold a number at one moment and a string the next, with type determined at runtime. This gives flexibility in how you handle data. Primitive types include `Number`, `String`, `Boolean`, `BigInt`, `Symbol`, `undefined` and `null`. Everything else is an object.
+
+## First-Class Functions
+Functions in JavaScript are **first-class citizens** – they are simply objects of type `Function`. You can assign functions to variables, pass them as arguments to other functions, and return them from functions. This enables powerful functional programming patterns. For instance, JavaScript has built-in higher-order functions like `Array.prototype.map`, which takes a function to apply to each element:
+
+```jsx
+const numbers = [1, 2, 3];
+const squares = numbers.map(n => n * n);  // [1, 4, 9]
+```
+
+Functions can form **closures**, capturing variables from their outer scope even after that outer function has returned. This makes it possible to have private state and factory functions. The first-class nature of functions is also the basis for **callbacks** and later developments like promises and async/await.
+
+## Prototype-Based Object-Oriented Programming
+
+JavaScript uses prototypes rather than classical inheritance. Every object can have a **prototype**, which is another object that provides inherited properties. This forms a prototype chain. For example, you can create an object and have it inherit methods from another:
+
+```jsx
+const parent = { greet() { console.log("Hello"); } };
+const child = Object.create(parent);
+child.greet();  // "Hello" (inherited from parent)
+```
+
+In ES6, a `class` syntax was introduced as syntactic sugar over the prototype system. It allows developers to use a more familiar class-based syntax while still using prototypes under the hood. JavaScript’s OOP supports **encapsulation** (via closures or private fields in classes) and **polymorphism** (objects can override inherited methods). The prototype system is very dynamic – you can even add properties to an object’s prototype at runtime, affecting all objects that inherit from it. This flexibility is powerful but should be used carefully to avoid unexpected behavior.
+
+## Asynchronous Programming
+
+JavaScript avoids blocking the main thread by embracing asynchronous operations. The **event loop** manages a queue of tasks and microtasks. [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model#:~:text=memory%20represented%20by%20the%20buffer,exits%20by%20emptying%20the%20stack)
+Key mechanisms include:
+
+- **Callbacks:** Functions passed as arguments to be invoked when an async operation completes. For example, handling an HTTP response in old APIs:
+    
+    ```jsx
+    ajaxRequest(url, function(response) {
+      console.log("Got response:", response);
+    });
+    ```
+    
+- **Promises:** Introduced in ES2015, a Promise represents the future result of an async operation. Instead of nesting callbacks (which can lead to “callback hell”), you attach `.then` and `.catch` handlers to promises, enabling chaining of async actions.
+Methods such as `Promise.all()`, `Promise.race()`, `Promise.allSettled()`, and `Promise.any()` coordinate multiple promises.
+- **async/await:** Added in ES2017, this provides syntactic sugar on top of promises. You can write code that *looks* synchronous with `await` keywords, but under the hood it’s non-blocking. For example:
+    
+    ```jsx
+    async function fetchData() {
+      try {
+        const res = await fetch('/api/data');      // waits for the fetch Promise
+        const data = await res.json();            // waits for the parsing Promise
+        console.log(data);
+      } catch (err) {
+        console.error("Error:", err);
+      }
+    }
+    ```
+    
+    - This structure is more readable and linear. Importantly, using `await` does **not** block the entire thread – it only suspends that async function, allowing other events to be processed in the meantime [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Language_overview#:~:text=If%20you%20have%20an%20async,If%20you%20are%20a%20functional). The rest of the program continues to run while the awaited operation is in progress, preserving responsiveness.
+    - **Event loop:** JavaScript’s concurrency model is based on an event loop. The runtime (browser or Node) manages a queue of callback functions (from async operations, timers, etc.). The engine executes tasks from this queue one by one. When an async operation finishes (e.g., an AJAX response arrives), its callback (or promise continuation) is queued to be executed. The event loop picks up these callbacks when the call stack is free[geeksforgeeks.org](https://www.geeksforgeeks.org/node-js/non-blocking-event-loop-in-node-js/#:~:text=,when%20the%20stack%20is%20empty). This allows JavaScript to handle many operations concurrently with a single thread, as elaborated in the Asynchronous Programming section below.
+- **Advanced promise features:** `Promise.withResolvers()` (standard since March 2024) returns a promise along with its resolve/reject functions.
+`Promise.try()` (standard in 2025) wraps synchronous or asynchronous callbacks into a promise. `Promise.any()` resolves when the first promise fulfils; `Promise.allSettled()` waits for all promises regardless of rejection.
+
+## Single-Threaded with an Event Loop
+
+In browsers and Node.js, JavaScript executes on a **single thread**. The engine runs tasks sequentially; asynchronous operations offload I/O to the browser or operating system, which queues callbacks when complete. This eliminates data races on shared memory but means long‑running tasks block the thread. The event loop picks tasks from the queue when the call stack is empty. [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model#:~:text=memory%20represented%20by%20the%20buffer,exits%20by%20emptying%20the%20stack)
+
+### Worker Threads and Parallelism
+
+While the main thread is single‑threaded, **Web Workers** (in browsers) and **Node Worker Threads** (since v10.5[nodejs.org](https://nodejs.org/en/blog/release/v10.5.0#:~:text=,20876)) allow running code in separate threads. Web Workers cannot access the DOM; they communicate via `postMessage()`. Node worker threads are useful for CPU‑bound tasks. **Service Workers** act as proxy servers within the browser, intercepting network requests and enabling offline capabilities. **Cluster mode** in Node spawns multiple processes to utilise multi‑core CPUs.
+
+## Lexical Scoping and Modules
+
+JavaScript originally had function-level scope: variables declared with `var` are scoped to the function (or globally if declared outside any function). In ES2015, **block scope** was introduced via `let` and `const`, meaning variables can be scoped to blocks `{ ... }` like in most other languages. JavaScript uses **lexical scoping**, which means a function’s scope is determined by its position in source code. Inner functions have access to variables of outer functions (even after the outer function has returned, through closures). This scoping model is crucial for closures, as it allows inner functions to “remember” the environment they were created in. 
+
+Arrow functions (`() => {}`) lexically bind `this` and `arguments`, avoiding common pitfalls when using `this` in callbacks.
+
+Modules support `import` and `export` statements; dynamic `import()` returns a promise that loads modules on demand. Top‑level `await` allows awaiting modules during initialisation.

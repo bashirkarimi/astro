@@ -1,0 +1,89 @@
+---
+title: "Client-Side (Browser) Capabilities"
+description: "How JavaScript interacts with the browser environment to create dynamic web experiences."
+technology: "javascript"
+category: "core features"
+order: 2
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["javascript", "features", "client-side"]
+---
+
+
+When running in a web browser, JavaScript can interact with the webpage and user in powerful ways:
+
+## DOM Manipulation
+
+The **Document Object Model (DOM)** represents HTML as a tree of nodes. JavaScript can traverse and modify this tree to create dynamic interfaces:
+
+- **Selecting elements:** Use `document.getElementById()`, `querySelector()`, or `querySelectorAll()`.
+- **Creating elements:** `document.createElement()` creates new nodes; set attributes via `setAttribute()` or the `classList` API; append nodes with `appendChild()` or `element.append()`.
+- **Removing elements:** `element.remove()` detaches a node.
+- **Updating content:** Modify `textContent`, `innerHTML` (caution: risk of XSS), or dataset attributes.
+- **Templates and Web Components:** Template literals build markup strings; the `<template>` element holds inert DOM fragments that can be cloned. **Web Components** allow creating custom elements with encapsulated structure and styling.
+
+## Event Handling
+
+JavaScript enables websites to respond to **events** – user interactions or other actions:
+
+- **Mouse events:** `click`, `dblclick`, `mousedown`, `mouseup`, `mousemove`, `mouseenter`/`mouseleave`, etc. (used for interactions like clicking buttons or dragging elements).
+- **Keyboard events:** `keydown`, `keyup`, `keypress` (useful for shortcuts or form input handling).
+- **Form events:** `submit`, `change`, `input`, `focus`, `blur` (to validate input or update UI as the user types).
+- **Window/document events:** `load` (fires when page assets are loaded), `scroll`, `resize`, `beforeunload`, etc.
+- **Touch events:** `touchstart`, `touchmove`, `touchend`.
+- **Custom events:** You can define your own event types and dispatch them as needed.
+    
+    JavaScript uses an **event propagation** model with bubbling and capturing phases, which allows techniques like **event delegation** (attach one event listener on a parent element to handle events on all its child elements, improving performance). For example, instead of adding a click handler to every row in a table, you can add one handler to the table element and determine which row was clicked by examining the event target. Event handling is central to making web pages interactive and responsive to user input.
+    
+
+## Browser APIs
+
+Modern browsers provide a plethora of built-in APIs that JavaScript can use to extend functionality beyond basic DOM manipulation. Some notable categories:
+
+- **DOM API:** Core methods for traversing and manipulating the DOM. For example, `querySelectorAll` to find elements, `classList` to manage CSS classes, `innerHTML` or newer `Element.append` to insert content, etc.
+- **CSSOM:** In addition to HTML DOM, there’s a CSS Object Model. JavaScript can read and change CSS rules on the fly or compute styles (`getComputedStyle`). It can also directly change element styles via the `style` property or by toggling CSS classes.
+- **Storage APIs:** Mechanisms to store data in the browser:
+    - `localStorage` – persists small key/value pairs indefinitely (or until cleared). Useful for storing user preferences or caching small data (around 5MB limit in many browsers).
+    - `sessionStorage` – similar to localStorage but scoped to a browser session (data is cleared when the tab is closed).
+    - **IndexedDB** – a client-side NoSQL database for more complex or larger amounts of structured data. You can store objects and retrieve them with indexes, useful for offline apps.
+    - Cookies – a traditional way to store small data (often for server communication, like session IDs). Cookies are sent with HTTP requests, whereas the above storage APIs are not.
+- **Network Requests (Fetch & AJAX):** JavaScript can make HTTP requests without reloading the page:
+    - The **Fetch API** (modern replacement for XMLHttpRequest) allows you to `fetch()` resources (GET, POST, etc.) and returns a Promise. You can retrieve and send data to servers (e.g., getting JSON from a REST API, or posting form data asynchronously).
+    - Prior to fetch, **XMLHttpRequest** (XHR) was used (often referred to as “AJAX”). Fetch is simpler and uses promises, but XHR is still available for low-level needs or legacy code.
+    - These capabilities enable **AJAX**: Asynchronous JavaScript and XML (though JSON is more common than XML now). It’s what lets web apps refresh parts of the page with new data (like new tweets loading without a full page refresh).
+    - WebSockets: A separate API for creating a persistent, bidirectional connection to a server, enabling real-time data transfer (useful for chat apps, live updates).
+- **Graphics and Animation:**
+    - **Canvas API:** Allows drawing 2D graphics via a `<canvas>` element. You obtain a drawing context (`canvas.getContext('2d')`) and then can draw shapes, text, images, and even do pixel manipulation. This is used for games, visualizations, or any custom rendering. Canvas is procedural (you issue draw commands in code).
+    - **WebGL:** A web standard for 3D graphics (or high-performance 2D) using the GPU. WebGL context on a canvas allows rendering sophisticated 3D scenes or offloading heavy graphical computations to the graphics card. Libraries like Three.js build on WebGL to make it easier. With WebGL, you can create interactive 3D visuals or even games that run in the browser.
+    - **SVG:** Not a JS API per se, but JavaScript can manipulate Scalable Vector Graphics in the DOM for vector shapes and animations.
+    - **Animations:** JavaScript can directly manipulate CSS properties or use the Web Animations API to perform animations. However, many animations can be done purely in CSS (with transitions or keyframes) which is often more efficient. JavaScript can coordinate complex animation sequences or trigger CSS animations by adding/removing classes. For smooth animations, `requestAnimationFrame` is used to sync updates to the browser’s repaint cycle.
+- **Multimedia:**
+    - **HTMLMediaElement:** Control playback of `<audio>` and `<video>` elements (play, pause, seek, volume, events like `timeupdate`).
+    - **Web Audio API:** Build complex audio graphs for synthesis and processing.
+    - **WebRTC:** Real‑time peer‑to‑peer audio/video/data streaming. Utilised in video chat and collaborative apps.
+- **Device and OS Integration:**
+    - **Geolocation API** obtains device location (with permission).
+    - **Clipboard API** reads from and writes to the system clipboard.
+    - **Drag and Drop API** enables drag‑and‑drop of files or elements.
+    - **File API** reads local files selected or dropped by the user.
+    - **Notifications API** displays system‑level notifications (requires permission).
+    - **Fullscreen API** enters full‑screen mode for elements.
+    - **Device APIs** for battery status, network information, vibration, orientation sensors and more.
+- **Workers (Background Threads):**
+    - **Web Workers:** Allow running JavaScript in the background, on a separate thread from the main UI. Web Workers can perform heavy computations or data processing without freezing the UI. They do not have direct access to the DOM (to avoid race conditions), but they can communicate with the main thread via message passing (postMessage). This is useful for things like sorting a large dataset, image processing, or running algorithms – you send data to a worker, it does the work, then sends results back.
+    - **Service Workers:** A special kind of worker that acts as a proxy between your web app and the network. Service workers can intercept network requests and serve custom responses, enabling features like offline access (via caching assets/data), background sync, and push notifications. Service workers have a life cycle separate from web pages and can run even when the page is not open (for handling push messages). They are a foundation of **Progressive Web Apps**.
+- **Third-Party APIs Integration:** JavaScript can also load and interact with external services:
+    - Example: a social media JavaScript SDK (like embedding a Twitter feed or a Facebook like button) – these are scripts provided by those platforms that you include and then call their functions or widgets.
+    - Using fetch or other HTTP clients, your JS app can talk to *any* web API (e.g., Google Maps API, weather API, etc.). For instance, you might fetch data from OpenWeatherMap and then update your page with the current weather.
+
+## Form Validation & User Input
+
+Client‑side validation improves user experience by ensuring that form submissions contain valid data. Techniques:
+
+- Use HTML5 attributes (`required`, `pattern`, `min`, `max`, `minlength`, `maxlength`) for native validation.
+- Custom validation with JavaScript checks values on `input` or `submit` events. Provide real‑time feedback (e.g., password strength indicators).
+- Use `event.preventDefault()` to stop form submission when validation fails.
+- Enhance inputs with interactive widgets (date pickers, autocompletes).
+- Consider accessibility: use labels, manage focus on errors and use `aria-describedby` to associate error messages.
+
+In summary, on the client side, JavaScript has access to the full capabilities of the web platform, from manipulating document content and style to interacting with the operating system features (with permission). This makes it possible to build rich web applications that can function like desktop apps. Modern frameworks abstract a lot of these details, but understanding these core APIs is important when you need to do something custom or optimize performance.

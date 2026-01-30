@@ -1,0 +1,63 @@
+---
+title: "Modern Web Capabilities"
+description: "An overview of modern web capabilities enabled by JavaScript and browser APIs."
+technology: "javascript"
+category: "core features"
+order: 8
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["javascript", "modern web"]
+---
+
+
+Beyond language features, the web platform itself has evolved. Modern JavaScript running on the web can take advantage of capabilities that make web apps more like native apps:
+
+## Progressive Web Apps (PWAs)
+
+PWAs are web applications that can behave like native applications. Key PWA features enabled by JavaScript and browser APIs:
+
+- **Offline functionality:** Using service workers, PWAs can cache resources (HTML, CSS, JS, images, JSON data) so that the app can load and even function offline or on flaky networks. For example, a news app might cache the latest articles so you can read them without internet.
+- **Installable:** PWAs can be installed on a user’s home screen (mobile) or as an app (desktop, via features in Chrome/Edge). This is done through a Web App Manifest (a JSON file) and the browser’s support for installation. An installed PWA runs in a standalone window without the address bar, giving an app-like experience.
+- **Push Notifications:** With user permission, a service worker can subscribe to push notifications (via Push API). The server can then send notifications that the service worker receives, and it can display system notifications to the user (even when the app is not open, as long as the service worker is active in the background).
+- **Background Sync:** A service worker can defer certain actions until connectivity is back. For example, if a user fills a form offline, background sync can send the data when connectivity is restored.
+- **Performance improvements:** Because PWAs cache aggressively, they can load almost instantly on subsequent visits. Also, by controlling the network requests, they can decide when to go to network and when to serve cached content.
+    
+Overall, PWAs make web apps more reliable (works offline), more integrated (launchable from home screen, can even show up in app switcher), and capable of re-engaging users (through notifications).
+
+
+## Web Components
+
+Web Components are a set of standards for creating **reusable, encapsulated custom elements**:
+
+- **Custom Elements:** You can define your own HTML tags, e.g., `<user-card>` or `<todo-list>`, and associate behavior with them via JavaScript classes (using `window.customElements.define`). Once defined, you can use that tag in any page as if it were a native element.
+- **Shadow DOM:** This provides encapsulation by allowing an element to have its own DOM subtree that is isolated from the main document DOM. Styles defined inside a shadow DOM don’t leak out, and outside styles don’t penetrate in (unless explicitly allowed). This means you can have, say, a `<my-modal>` component with its internal structure styled without worrying that page CSS will mess it up, or vice versa.
+- **Templates and HTML Imports (deprecated):** There’s `<template>` tag which can hold HTML that isn’t rendered until you clone it (often used in web components to define the structure). HTML Imports was an older spec for modular HTML but is not widely used now (most people just use JS modules to construct components).
+- **Reusability without frameworks:** Web components enable creating design systems that work across frameworks or plain JS. For instance, you could create `<date-picker>` as a web component and use it in a React app, an Angular app, or just a static HTML page, because it’s recognized by the browser once registered. This is powerful for organizations that want a consistent set of UI components across different projects.
+- Web components are a standard, but developers often use libraries like Lit (by Google) to simplify writing them, as lit-html helps with templating inside the component.
+
+## Accessibility (ARIA)
+
+Accessibility is crucial for web apps to be usable by people with disabilities (e.g., those using screen readers or unable to use a mouse). JavaScript plays a role in making web apps accessible:
+
+- **ARIA attributes:** ARIA (Accessible Rich Internet Applications) is a set of attributes that can be added to HTML to convey role, state, and properties to assistive technologies. For example, adding `role="dialog"` to a div that acts like a modal, or `aria-label="Close"` on a button that only has an X icon (so a screen reader knows what it does). JS often needs to manage these attributes, especially in dynamic components. E.g., if you create a custom tab interface with JS, you should update `aria-selected` and focus as the user navigates tabs.
+- **Managing focus:** When modals open, JavaScript should typically move focus into the modal, and trap focus within it (so tab key doesn’t go to background page elements). When the modal closes, return focus to the element that opened it. These kind of focus management tasks require JS.
+- **Keyboard navigation:** Ensure that interactive components (custom dropdowns, carousels, etc.) can be operated via keyboard. This means listening for key events (like arrow keys, Enter, Escape) and responding accordingly. For example, a custom select menu should open on Alt+Down, move selection with arrow keys, close on Escape, etc., to match native select behavior.
+- **Live regions:** ARIA can mark parts of the DOM as “live” (e.g., `aria-live="polite"`), meaning screen readers will announce changes in those regions even if focus is elsewhere. For example, a form validation error might be put in a live region to announce “Error: Please enter a valid email”. JavaScript might dynamically inject such messages into an aria-live container when needed.
+- **ARIA roles and properties:** JS might add `aria-expanded="true/false"` on a toggled element (like a collapsible section) to inform screen readers of the state. It might set `aria-disabled="true"` instead of or in addition to using the `disabled` attribute in cases of custom controls.
+
+Overall, while much of basic accessibility can be handled with proper HTML (like using `<button>` for buttons, `<a>` for links, labels for inputs, etc.), as soon as you create custom interactive elements with JS, you need to think about ARIA roles and keyboard support. There are standards (WAI-ARIA Authoring Practices) that describe how common patterns (menus, tabs, dialogs, etc.) should behave accessibly. JavaScript is the tool to implement those behaviors.
+
+## Runtime Environments
+
+We’ve already covered the big runtime environments for JS:
+
+- **Browsers (Client-side):** Chrome, Firefox, Safari, Edge, etc., each with their own JS engine but all following the same standards (mostly) and web APIs. Code written for the browser often has to consider cross-browser compatibility (though evergreen modern browsers have reduced this pain) and the DOM environment.
+- **Node.js (Server-side):** Uses V8 engine, provides its own APIs (file system, HTTP, etc.). Not all browser globals are present (no `document` or `window` in Node, for example).
+- **Deno, Bun:** Alternative runtimes with their own twists (permissions, performance, built-ins).
+- **Edge runtimes:** Like Cloudflare Workers or Deno Deploy, which are sort of like browser-style APIs (somewhat like a Service Worker model) but on the server. These often use a limited JS environment (e.g., Cloudflare Workers don’t have a full Node API, but they have fetch, etc., more like a browser).
+- **Mobile hybrid apps:** Cordova/PhoneGap (historically) allowed using JS to build mobile apps by providing a WebView and bridging native capabilities to JS. React Native uses JS runtime (Hermes or JavaScriptCore) for logic but renders native components.
+- **Desktop hybrid apps:** Electron (Chromium + Node) means you have both the browser APIs and Node APIs available, which is powerful but can be heavy. Lighter alternatives use a system webview.
+
+It’s useful as a JS developer to understand that some code is environment-specific. For instance, using `document.querySelector` makes sense in a browser or Electron renderer, but in Node it would be undefined. Conversely, using `require('fs')` works in Node but not in the browser. Tools like webpack or Vite can polyfill or shim some Node built-ins for browser (for example, to use Buffer or path manipulation in front-end), but as a principle, one should be aware of the target environment when writing JS code.
+
+In full-stack apps, often you’ll write isomorphic (or universal) code that runs in both browser and server (e.g., for server-side rendering or input validation). Modern frameworks (Next.js, etc.) actually let you run some JS on both sides seamlessly.

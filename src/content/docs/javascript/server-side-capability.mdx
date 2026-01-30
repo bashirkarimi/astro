@@ -1,0 +1,52 @@
+---
+title: "Server-Side Capabilities"
+description: "How JavaScript is used on the server side to build backend services and applications."
+technology: "javascript"
+category: "core features"
+order: 3
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["javascript", "features", "server-side"]
+---
+
+Outside of the browser, JavaScript (through platforms like Node.js, Deno, and Bun) can be used for full-fledged backend development.
+
+## Node.js: JavaScript on the Server
+
+Launched in 2009, **Node.js** brought JavaScript to the server by embedding the V8 engine with a libuv event loop. Key capabilities:
+
+- **Web servers and APIs:** You can create an HTTP server to handle requests, serve files or JSON data, and implement RESTful or GraphQL APIs. Popular libraries (Express, Fastify, etc.) make this straightforward, but it can also be done with built-in modules.
+- **File system operations:** Server-side JS can read from and write to disk (e.g., serve static files, generate files, log data, etc.).
+- **Database interactions:** There are JS client libraries for nearly every database (SQL or NoSQL). For instance, using Node you might connect to MongoDB (with the official `mongodb` driver or Mongoose), or to MySQL/PostgreSQL (with libraries like `pg` for Postgres). JavaScript can thus perform queries, transactions, and any needed data processing on the server.
+- **User authentication & security:** Implementing sign-up/login flows, hashing passwords, managing JWT tokens or sessions – Node has libraries like Passport.js or services it can integrate with. Encryption or other cryptographic operations can be done via Node’s `crypto` module or Web Crypto API (also available in browsers).
+- **Real-time applications:** Using technologies like WebSockets or frameworks like Socket.io, a Node server can push updates to clients in real-time (chat applications, live notifications, collaborative tools, etc.).
+- **Microservices and Serverless:** JavaScript (Node) is commonly used in microservice architectures and cloud functions (AWS Lambda, Azure Functions, etc.), because of its fast startup and efficient I/O model. In such contexts, many small JS functions might each handle a specific task in a larger system.
+- **Command-line tools:** Node.js especially is often used to write CLI tools (for example, the `npm` CLI itself is written in Node). You can access command-line arguments, read stdin/stdout, and use Node’s rich ecosystem to create scripts that automate tasks or build tools (like linters, bundlers, etc., many of which are written in JS).
+- **Desktop and other:** Using frameworks like Electron (which bundles a Chromium browser and Node runtime), developers use JS/HTML/CSS to create cross-platform desktop applications. On the server side, there are also runtime variations like **Electron’s main process** (which is essentially Node) and specialized environments like **Cloudflare Workers** (which run a variant of the JS runtime at edge locations for fast CDN-level computing).
+
+## Deno: Secure Runtime with TypeScript
+
+**Deno**, created by Ryan Dahl (Node’s original author), reached v1.0 in 2020. It aims to address Node’s shortcomings:
+
+- **Secure by default:** Deno scripts cannot access files, network or environment variables unless explicitly permitted [docs.deno.com](https://docs.deno.com/runtime/fundamentals/web_dev/#:~:text=1,that%20includes%20modules%20for%20common).
+- **TypeScript built in:** TypeScript and JavaScript run without separate compilation.
+- **ES module imports by URL:** Modules are fetched via URLs; Deno caches them. There is no central package manager, but since v1.28 (2022) Deno supports importing npm packages [deno.com](https://deno.com/blog/v1.28#:~:text=We%E2%80%99re%20excited%20to%20announce%20that,such%20as%20React%2C%20Vue%2C%20etc).
+- **Standard library and tooling:** Deno includes a standard library, test runner, linter and formatter.
+- **Implementation:** It uses the V8 engine and is written in Rust [en.wikipedia.org](https://en.wikipedia.org/wiki/Deno_(software)#:~:text=Deno%20,7).
+
+Deno is gaining adoption, particularly for scripts where secure defaults and TypeScript convenience are important.
+
+## Bun: Ultra‑fast, All‑in‑One Toolkit
+
+**Bun**, introduced in 2023, is a high‑performance runtime and toolchain:
+
+- **Performance:** Written in Zig, using the WebKit JavaScriptCore engine, Bun boasts fast startup and execution.
+- **Integrated toolchain:** It includes a package manager (`bun install`), a bundler, a test runner, and built‑in clients for SQLite and Redis.
+- **Compatibility:** Bun aims for Node API compatibility while delivering better speed. It can compile apps into a single executable binary [theregister.com](https://www.theregister.com/2025/10/13/bun_13_full_of_features/#:~:text=Version%201,do%20too%20much%2C%20too%20fast).
+- **Adoption:** By late 2025, Bun had millions of monthly downloads and usage by companies such as Anthropic [theregister.com](https://www.theregister.com/2025/10/13/bun_13_full_of_features/#:~:text=Version%201,do%20too%20much%2C%20too%20fast).
+
+Bun consolidates what previously required multiple tools (npm/Yarn, Babel, Webpack, Jest) into one package, appealing to developers prioritising speed.
+
+In essence, **Node.js** established JavaScript on the server, **Deno** reimagined it with security and modern features, and **Bun** is pushing the performance and integration envelope.
+
+The key takeaway is that JavaScript is no longer limited to web page scripting – it’s a general-purpose language that, thanks to various engines and platforms, can run almost anywhere. This ubiquity is a major advantage: you can use one language across the stack (frontend, backend, tooling, etc.) which is why many developers and organizations have standardized on JavaScript/TypeScript for full-stack development.
