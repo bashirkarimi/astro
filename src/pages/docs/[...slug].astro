@@ -23,11 +23,12 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: CollectionEntry<"docs"> };
 const { Content, headings } = await entry.render();
 const technology = entry.data.technology;
+const pageTitle = entry.data.title;
 const allDocs: CollectionEntry<"docs">[] = await getCollection("docs");
 const categories = allDocs.filter((doc) => doc.data.technology === technology);
 ---
 
-<Layout title={entry.data.title}>
+<Layout title={pageTitle}>
   <nav
     class="flex items-center gap-2 text-sm text-muted-foreground mt-6"
     aria-label="Breadcrumb"
@@ -42,7 +43,7 @@ const categories = allDocs.filter((doc) => doc.data.technology === technology);
     <Section class="lg:order-last">
       <article class="mx-auto">
         <header class="pb-6 md:pb-12 border-b border-border flex flex-col">
-          <h1 class="heading-page mb-4 order-1">{entry.data.title}</h1>
+          <h1 class="heading-page mb-4 order-1">{pageTitle}</h1>
           <Badge class="mb-2 order-0" variant="secondary" size="sm">
             <span class="sr-only">Category: </span>
             {technology}
@@ -78,7 +79,7 @@ const categories = allDocs.filter((doc) => doc.data.technology === technology);
                 variant="ghost"
                 size="md"
                 href={`/docs/${category.slug}`}
-                class="justify-between! group"
+                class={`justify-between! group ${pageTitle == category.data.title && "text-accent font-semibold"}`}
               >
                 {category.data.title}
               </Button>
