@@ -1,0 +1,18 @@
+---
+title: "Limitations & Trade-offs"
+description: "An overview of Astro's limitations and trade-offs."
+technology: "astro"
+category: "limitations"
+order: 2
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["astro", "limitation"]
+---
+
+
+- **Not ideal for heavy single-page-apps (SPA):** If your product is a highly interactive webapp that needs large global client state and frequent client routing, a framework focused on client-side UX (Next.js with heavy client logic, or a SPA framework) might fit better.
+- **Complexity when mixing frameworks:** Although you *can* import many frameworks, mixing them increases bundle/tooling complexity, more build-time overhead, and potential duplication of runtime (e.g., two JS frameworks ending up in client bundles if hydrated).
+- **Ecosystem maturity:** Astro’s ecosystem is fast-growing but historically smaller than React/Next.js; some niche plugins/integrations might be missing or less mature.
+- **Runtime features & advanced SSR patterns:** Next.js has more built-in server/runtime features (middleware, advanced image optimization, edge functions) that might be more mature.
+- **Hosting/deployment nuance:** Some advanced SSR/ISR behaviors depend on the adapter and target platform features — so the “out-of-the-box” behaviour may vary more than in frameworks tightly integrated with a single host.
+- **Learning mental model shift:** Teams used to client-first SPA thinking need to adjust to HTML-first, partial hydration architecture.

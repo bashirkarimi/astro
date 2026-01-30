@@ -1,0 +1,99 @@
+---
+title: "Core Features & Capabilities"
+description: "An overview of Astro's core features and capabilities."
+technology: "astro"
+category: "features"
+order: 1
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["astro", "feature"]
+---
+
+- **Islands Architecture (partial hydration):** Astro renders pages to static HTML and hydrates only small interactive components (“islands”) on the client. This reduces JS shipped and improves TTFB / First Contentful Paint.
+- **Framework-agnostic components:** You can import React, Vue, Svelte, Solid, Preact components inside `.astro` pages and hydrate them individually.
+- **SSR + SSG + ISR-like behaviours:** Supports static site generation (SSG) by default, plus server rendering if you configure an adapter (Netlify, Vercel, Cloudflare, etc.). There are also patterns for incremental/static regeneration with hosting-specific adapters.
+- **Zero/Minimal client JS by default:** If you don’t opt-in to hydration, components stay static — no runtime JS.
+- **Built-in content features:** Good markdown/content pipeline; `.md`/`.mdx` support, collections, easy content-driven pages (great for blogs, docs).
+- **Simple routing:** File-based routing with straightforward conventions.
+- **Integrated image & asset handling:** Built-in optimizations (depends on version and adapters) and ability to use external image services.
+- **Fast builds & Dev UX:** Quick dev server, HMR, and simple project bootstrap.
+- **Extensible via integrations:** Adapters and integrations for CSS frameworks, CMS, analytics, and deployment targets.
+
+```jsx
+---
+// src/pages/index.astro
+import Counter from '../components/Counter.jsx';
+---
+<html>
+  <body>
+    <h1>Hello</h1>
+    <!-- Renders static markup; hydrates the Counter only on client -->
+    <Counter client:load />
+  </body>
+</html>
+```
+
+## **Astro by itself**
+
+Astro’s `.astro` components are **HTML-first**. They handle:
+
+- Layouts
+- Static content (text, images, markdown)
+- Simple interactivity (like links or anchors)
+
+✅ These render to static HTML at build time and need **zero JavaScript** on the client.
+
+---
+
+## **When a framework is needed**
+
+You bring in React, Vue, Svelte, etc., when you need **client-side interactivity** beyond what Astro can do natively.
+
+Typical cases:
+
+1. **Dynamic, stateful UI components**
+    - Example: a counter, a form with live validation, a shopping cart mini-widget.
+    - Astro alone can’t manage dynamic state on the client — a JS framework handles that.
+2. **Complex interactivity or animations**
+    - Example: drag-and-drop interfaces, interactive charts, sliders, carousels.
+    - You need a reactive framework to track state changes efficiently.
+3. **Reuse existing component libraries**
+    - Example: Material-UI React components or Vuetify for Vue.
+    - If you already have a library or want an ecosystem of prebuilt interactive components, you import the framework.
+4. **Framework-specific ecosystem or integrations**
+    - Some plugins, hooks, or integrations only exist in a framework (like a React hook for auth or a Vue composable for maps).
+
+---
+
+## **How Astro integrates frameworks**
+
+Astro uses **“partial hydration” / islands architecture**: 
+
+- You import the interactive component in your `.astro` page.
+- You specify a hydration directive on how/when it should run on the client:
+
+```
+---
+import Counter from '../components/Counter.jsx';
+---
+<h1>Welcome</h1>
+<Counter client:load />  <!-- React hydrates this only on the client -->
+```
+
+**Hydration directives**:
+
+| Directive | Meaning |
+| --- | --- |
+| `client:load` | Hydrate as soon as JS loads |
+| `client:idle` | Hydrate when browser is idle |
+| `client:visible` | Hydrate when component scrolls into view |
+| `client:media="(min-width: 768px)"` | Hydrate based on media query |
+
+This ensures **minimum JavaScript** is shipped; only the interactive islands load JS.
+
+---
+
+## **Rule of thumb**
+
+- **No framework needed:** Static content, simple interactions, text, images, markdown.
+- **Framework needed:** Stateful, interactive, or library‑dependent components (dynamic UI, real‑time updates, heavy client logic).

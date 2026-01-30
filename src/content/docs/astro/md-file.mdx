@@ -1,0 +1,129 @@
+---
+title: "What is a `.md` file in Astro"
+description: "Understanding Astro's use of Markdown files for content."
+technology: "astro"
+category: "know-how"
+order: 3
+lastUpdated: 2024-01-10
+authors: ["john-doe"]
+tags: ["astro"]
+---
+
+
+A typical Astro Markdown file looks like this:
+
+```markdown
+---
+title: "My First Blog Post"
+description: "An intro to Astro"
+pubDate: 2025-01-01
+tags: ["astro", "markdown"]
+---
+
+## Hello World
+
+This is my blog post written in**Markdown**.
+
+```
+
+It has two parts:
+
+1. **Frontmatter (YAML)**
+    - Structured data (like JSON, but more readable)
+    - Used for metadata (title, date, tags, SEO, etc.)
+2. **Markdown content**
+    - Human-readable content
+    - Converted to HTML at build time
+
+Astro turns this into:
+
+- A **page** (or data source)
+- With **typed metadata**
+- And **compiled HTML** at build time
+
+---
+
+## Why Astro uses Markdown so heavily
+
+Astro is designed for **content-driven sites**:
+
+- Blogs
+- Documentation
+- Marketing pages
+- Portfolios
+- Landing pages
+
+Markdown aligns perfectly with Astro’s core philosophy:
+
+> Ship less JavaScript. Render at build time.
+> 
+
+## Why use Markdown instead of JSON?
+
+**Markdown is for `content`, JSON is for `data`**
+
+| Markdown | JSON |
+| --- | --- |
+| Written by humans | Written for machines |
+| Supports rich text | No formatting |
+| Readable in GitHub | Hard to read |
+| Supports headings, links, code | Needs rendering logic |
+
+## Markdown vs Headless CMS (Sanity, Contentful)
+
+### High-level positioning
+
+| Aspect | Markdown (.md / .mdx) | Headless CMS (Sanity / Contentful) |
+| --- | --- | --- |
+| Primary audience | Developers | Non-technical editors |
+| Content location | Git repo | External service |
+| Update model | Git commit → deploy | Live publishing |
+| Build model | Build-time | Build-time or runtime |
+| Infra cost | Free | Paid (at scale) |
+| Complexity | Very low | Medium → high |
+| SEO | Excellent | Excellent |
+| Best for | Blogs, docs, marketing | Editorial, product content |
+
+---
+
+### Authoring Experience
+
+**Markdown**
+
+✅ Pros:
+
+- GitHub-native
+- Easy PR reviews
+- No CMS UI needed
+- Offline editing
+- Perfect for dev teams
+
+❌ Cons:
+
+- Not editor-friendly
+- No previews without tooling
+- No role-based permissions
+
+**Sanity / Contentful**
+
+✅ Pros:
+
+- Visual editor
+- Rich previews
+- Permissions & roles
+- Structured relationships
+- Image pipelines
+
+❌ Cons:
+
+- Setup time
+- Learning curve
+- Vendor lock-in
+
+**Rule of thumb**
+
+> If developers write content → Markdown
+> 
+> 
+> If **editors write content** → CMS
+>
